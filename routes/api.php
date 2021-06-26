@@ -21,8 +21,8 @@ use App\Http\Controllers\AuthController\AuthController;
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    // Route::post('login', 'AuthController@login');
-    Route::post('signup', [AuthController::class, 'signUp']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/signup', [AuthController::class, 'signUp']);
 
     // Route::group([
     //   'middleware' => 'auth:api'

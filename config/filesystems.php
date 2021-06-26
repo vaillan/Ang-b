@@ -42,6 +42,27 @@ return [
             'visibility' => 'public',
         ],
 
+        'usersImg' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/usersImg'),
+            'url' => env('APP_URL').'/storage/usersImg',
+            'visibility' => 'public',
+        ],
+
+        'usersClientImg' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/usersClientImg'),
+            'url' => env('APP_URL').'/storage/usersClientImg',
+            'visibility' => 'public',
+        ],
+
+        'files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/files'),
+            'url' => env('APP_URL').'/storage/files',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
