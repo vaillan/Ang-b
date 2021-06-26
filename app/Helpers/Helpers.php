@@ -8,7 +8,7 @@ class Helpers {
     public function getUserInfo($user) {
         if($user) {
             $image = $this->getImages($user->image);
-            return \response()->json([
+            return response()->json([
                 'id' => $user->id,
                 'role' => $user->role,
                 'nick' => $user->nick,
