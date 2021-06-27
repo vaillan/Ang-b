@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Models\User;
 use Validator;
-
+use Storage;
 class AuthController extends Controller
 {
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         if($user) {
             if(Hash::check($request->password, $user->password)) {
-                $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+                $token = $user->createToken('Ang-app Password')->accessToken;
                 $getFullUser = new Helpers();
                 $response = ['access_token' => $token, 'user' => $getFullUser->getUserInfo($user)];
                 return response()->json($response, 200);
@@ -66,7 +66,29 @@ class AuthController extends Controller
     public function logout(Request $request) {
         $token = $request->user()->token();
         $token->revoke();
-        $response = ['message' => 'You have been successfully logged out!'];
-        return response($response, 200);
+        $response = ['valid' => true, 'message' => 'You have been successfully logged out!'];
+        return response()->json($response, 200);
+    }
+
+    public function updateImageUser(Request $request) {
+        $user = User::find($request->input('id'));
+
+        //subir imagen
+        $image = $request->file('image');
+        if($image){
+            //asignarle un nombre unico
+            $image_full = \time().'.'.$image->extension();
+
+            //guardarla en la carpeta storage/app/users
+            Storage::disk('usersImg')->put($image_full, File::get($image));
+
+            //setear el nombre de la imagen en el objeto user
+            $user->image = $image_full;
+        }
+        $save = $user->update() ? true : false;
+        if($save) {
+            $getFullUser = new Helpers();
+            return response()->json(['valid' => true, 'message' => 'datos actualizados correctamente', 'user' => $getFullUser->getUserInfo($user)],200);
+        }
     }
 }

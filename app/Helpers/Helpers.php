@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 class Helpers {
     public function getUserInfo($user) {
         if($user) {
-            $image = $this->getImages($user->image);
+            $image = $this->getImage($user->image);
             return response()->json([
                 'id' => $user->id,
                 'role' => $user->role,
@@ -25,7 +25,7 @@ class Helpers {
         return [];
     }
 
-    public function getImages($filename) {
+    public function getImage($filename) {
         $file = $filename ? Storage::disk('usersImg')->url($filename): null;
         return $file;
     }

@@ -24,10 +24,10 @@ Route::group([
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/signup', [AuthController::class, 'signUp']);
 
-    // Route::group([
-    //   'middleware' => 'auth:api'
-    // ], function() {
-    //     Route::get('logout', 'AuthController@logout');
-    //     Route::get('user', 'AuthController@user');
-    // });
+    Route::group([
+      'middleware' => 'auth:api'
+    ], function() {
+        Route::get('/logout', [AuthController::class, 'logout']);
+        Route::post('/updateImage', [AuthController::class, 'updateImageUser']);
+    });
 });
