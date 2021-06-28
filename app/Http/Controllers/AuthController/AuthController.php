@@ -7,8 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\Helpers;
 use App\Models\User;
-use Validator;
+use File;
 use Storage;
+use Validator;
 class AuthController extends Controller
 {
 
@@ -71,10 +72,10 @@ class AuthController extends Controller
     }
 
     public function updateImageUser(Request $request) {
-        $user = User::find($request->input('id'));
-
+        return response()->json(['request' => $request->imagen],500);
+        $user = \auth()->user();
         //subir imagen
-        $image = $request->file('image');
+        $image = $request->file('imagen');
         if($image){
             //asignarle un nombre unico
             $image_full = \time().'.'.$image->extension();
@@ -84,6 +85,8 @@ class AuthController extends Controller
 
             //setear el nombre de la imagen en el objeto user
             $user->image = $image_full;
+        }else {
+            return response()->json(['invalid' => "error imagen vacia"], 400);
         }
         $save = $user->update() ? true : false;
         if($save) {

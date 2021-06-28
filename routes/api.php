@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController\AuthController;
-
+use App\Http\Controllers\PostUserController\PostUserController;
+use App\Http\Controllers\UserController\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +29,10 @@ Route::group([
       'middleware' => 'auth:api'
     ], function() {
         Route::get('/logout', [AuthController::class, 'logout']);
-        Route::post('/updateImage', [AuthController::class, 'updateImageUser']);
+        Route::post('/update-image', [AuthController::class, 'updateImageUser']);
+        
+        //Post user
+        Route::get('/get-posts-user/{id}', [PostUserController::class,'getPostUser']);
+
     });
 });
