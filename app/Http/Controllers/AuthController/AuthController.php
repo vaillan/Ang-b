@@ -72,26 +72,27 @@ class AuthController extends Controller
     }
 
     public function updateImageUser(Request $request) {
-        return response()->json(['request' => $request->imagen],500);
-        $user = \auth()->user();
+        $user = User::find($request->input('user_id'));
         //subir imagen
-        $image = $request->file('imagen');
-        if($image){
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
             //asignarle un nombre unico
             $image_full = \time().'.'.$image->extension();
-
             //guardarla en la carpeta storage/app/users
             Storage::disk('usersImg')->put($image_full, File::get($image));
-
             //setear el nombre de la imagen en el objeto user
             $user->image = $image_full;
+            if($user->update()){
+                $getFullUser = new Helpers();
+                return response()->json(['valid' => true, 'message' => 'datos actualizados correctamente', 'user' => $getFullUser->getUserInfo($user)],200);
+            }else {
+            return response()->json(['error' => "xxxxxxxxxxxx"], 400);
+
+            }
+
         }else {
             return response()->json(['invalid' => "error imagen vacia"], 400);
         }
-        $save = $user->update() ? true : false;
-        if($save) {
-            $getFullUser = new Helpers();
-            return response()->json(['valid' => true, 'message' => 'datos actualizados correctamente', 'user' => $getFullUser->getUserInfo($user)],200);
-        }
+        
     }
 }

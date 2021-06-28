@@ -30,7 +30,7 @@ Route::group([
     ], function() {
         Route::get('/logout', [AuthController::class, 'logout']);
         Route::post('/update-image', [AuthController::class, 'updateImageUser']);
-        
+
         //Post user
         Route::get('/get-posts-user/{id}', [PostUserController::class,'getPostUser']);
 
