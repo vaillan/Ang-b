@@ -17,7 +17,6 @@ use Validator;
 
 class PostUserController extends Controller
 {
-    
     public function postUser(Request $request) {
         $carbon = new \Carbon\Carbon();
         $validator = Validator::make($request->all(), [
@@ -55,7 +54,7 @@ class PostUserController extends Controller
                 'lng' => $mexico['lng'],
                 'address' => $request->input('address'),
             ]);
-            
+
             if($query) {
                 return response()->json(['valid' => true, 'message' => 'post wass created successfully'],200);
             }
@@ -95,7 +94,6 @@ class PostUserController extends Controller
         $user = auth()->user();
         $postUser = PostUser::find($id);
         $addressPostUser = Address::where('post_user_id', $postUser->id)->where('user_id',$postUser->user_id)->first();
-
         return response()->json(['post' => $postUser, 'address' => $addressPostUser, 'user' => $user],500);
     }
 
