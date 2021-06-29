@@ -20,6 +20,6 @@ class Estado extends Model
     ];
 
     public function municipio() {
-        return $this->hasMany('App\Models\Municipios\Municipios', 'estado_id');
+        return $this->hasMany('App\Models\Municipio\Municipio', 'estado_id');
     }
 }

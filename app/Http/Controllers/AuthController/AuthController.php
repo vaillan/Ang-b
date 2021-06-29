@@ -71,6 +71,36 @@ class AuthController extends Controller
         return response()->json($response, 200);
     }
 
+    public function update(Request $request) {
+        $user = User::find($request->input('id'));
+        $id = $user->id;
+        $validator = Validator::make($request->all(), [
+            'name' => ['required','string','between:2,100'],
+            'about_me' => ['required','string','between:5,100'],
+            'last_name' => ['required','string','between:2,100'],
+            'nick' => ['required','string','between:2,20', 'unique:users,nick,'.$id],
+            'email' => ['required','unique:users,email,'.$id],
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors(),400);
+        }else {
+            $name = $request->input('name');
+            $about_me = $request->input('about_me');
+            $last_name = $request->input('last_name');
+            $nick = $request->input('nick');
+            $email = $request->input('email');
+            $user->name = $name;
+            $user->last_name = $last_name;
+            $user->about_me = $about_me;
+            $user->nick = $nick;
+            $user->email = $email;
+            $user->update();
+            $getFullUser = new Helpers();
+            return response()->json(['valid' => true, 'message' => 'datos actualizados correctamente', 'user' => $getFullUser->getUserInfo($user)], 200);
+        }
+    }
+
     public function updateImageUser(Request $request) {
         $user = User::find($request->input('user_id'));
         //subir imagen

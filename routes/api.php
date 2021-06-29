@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController\AuthController;
 use App\Http\Controllers\PostUserController\PostUserController;
 use App\Http\Controllers\UserController\UserController;
+use App\Http\Controllers\LocalidadController\LocalidadController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,23 +18,25 @@ use App\Http\Controllers\UserController\UserController;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 Route::group([
-    'prefix' => 'auth'
+    'prefix' => 'auth' //h
 ], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/signup', [AuthController::class, 'signUp']);
 
     Route::group([
-      'middleware' => 'auth:api'
+      'middleware' => 'auth:api' //http://api/auth/
     ], function() {
         Route::get('/logout', [AuthController::class, 'logout']);
         Route::post('/update-image', [AuthController::class, 'updateImageUser']);
+        Route::post('/update', [AuthController::class, 'update']);
 
         //Post user
-        Route::get('/get-posts-user/{id}', [PostUserController::class,'getPostUser']);
-
+        Route::get('/get-posts-user/{id}', [PostUserController::class, 'getPostUser']);
+        Route::post('/post-user', [PostUserController::class,'postUser']);
+        //Post client  
+        Route::post('/post-user-client', [PostClientController::class, 'createPostClient']);
+        //Mexico address
+        Route::post('/search-mexico-localidades', [LocalidadController::class,'searchMexicoLocalidades']);
     });
 });

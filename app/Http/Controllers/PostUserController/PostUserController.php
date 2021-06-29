@@ -12,7 +12,7 @@ use App\Models\Estado\Estado;
 use App\Models\Municipio\Municipio;
 use App\Models\Localidad\Localidad;
 use App\Helpers\Helpers;
-use App\User;
+use App\Models\User;
 use Validator;
 
 class PostUserController extends Controller
@@ -61,7 +61,7 @@ class PostUserController extends Controller
         }
     }
 
-    public function getPostUser($id) {
+    public function getPostUser(Request $request,$id) {
         $array_posts_user = PostUser::with('user','address')->where('user_id',$id)->orderBy('id', 'desc')->get();
         $new_array_posts_user = array();
         $getFullUser = new Helpers();

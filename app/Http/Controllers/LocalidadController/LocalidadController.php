@@ -9,7 +9,7 @@ use Validator;
 
 class LocalidadController extends Controller
 {
-    
+
     public function searchMexicoLocalidades(Request $request) {
         $validator = Validator::make($request->all(), [
             'search' => 'required|string',

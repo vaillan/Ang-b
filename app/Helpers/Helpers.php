@@ -2,8 +2,8 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Storage;
+use App\Models\Localidad\Localidad;
 use Illuminate\Http\Response;
-
 class Helpers {
     public function getUserInfo($user) {
         if($user) {
@@ -29,4 +29,12 @@ class Helpers {
         $file = $filename ? Storage::disk('usersImg')->url($filename): null;
         return $file;
     }
+
+    public function getLOcation($localidad_id) {
+        $location = Localidad::with(['municipio' => function($query) {
+            $query->with('estado');
+        }])->find($localidad_id);
+        return $location;
+    }
+
 }
