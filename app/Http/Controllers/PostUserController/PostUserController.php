@@ -61,7 +61,10 @@ class PostUserController extends Controller
         }
     }
 
-    public function getPostUser(Request $request,$id) {
+    public function getPostUser(Request $request, $id) {
+        if(!$id) {
+            return response()->json(['failed' => false],200);
+        }
         $array_posts_user = PostUser::with('user','address')->where('user_id',$id)->orderBy('id', 'desc')->get();
         $new_array_posts_user = array();
         $getFullUser = new Helpers();

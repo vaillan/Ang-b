@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController\AuthController;
 use App\Http\Controllers\PostUserController\PostUserController;
+use App\Http\Controllers\PostClientController\PostClientController;
 use App\Http\Controllers\UserController\UserController;
 use App\Http\Controllers\LocalidadController\LocalidadController;
 
@@ -19,13 +20,13 @@ use App\Http\Controllers\LocalidadController\LocalidadController;
 */
 
 Route::group([
-    'prefix' => 'auth' //h
+    'prefix' => 'auth'
 ], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/signup', [AuthController::class, 'signUp']);
 
     Route::group([
-      'middleware' => 'auth:api' //http://api/auth/
+      'middleware' => 'auth:api'
     ], function() {
         Route::get('/logout', [AuthController::class, 'logout']);
         Route::post('/update-image', [AuthController::class, 'updateImageUser']);
