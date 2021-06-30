@@ -17,24 +17,25 @@ use Validator;
 
 class PostUserController extends Controller
 {
-    public function postUser(Request $request) {
-        $carbon = new \Carbon\Carbon();
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'description' => 'required|string',
-            'budget_minimum' => 'required',
-            'budget_maximum' => 'required',
-            'init_date' => 'required',
-            'end_date' => 'required',
-            'divisa_budget_minimum' => 'required',
-            'divisa_budget_maximum' => 'required',
-            'localidad_id' => 'required',
-            'address' => 'required',
-        ]);
-        
-        if($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }else {
+    public function createPostUser(Request $request) {  //Crea post usuario tipo [user]
+
+        $query = \DB::transaction(function () use($request) {
+            $carbon = new \Carbon\Carbon();
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required',
+                'description' => 'required|string',
+                'budget_minimum' => 'required',
+                'budget_maximum' => 'required',
+                'init_date' => 'required',
+                'end_date' => 'required',
+                'divisa_budget_minimum' => 'required',
+                'divisa_budget_maximum' => 'required',
+                'localidad_id' => 'required',
+                'address' => 'required',
+            ]);
+            if($validator->fails()) {
+                return [$validator->errors()];
+            }
             $dt1 = $carbon->parse($request->input('init_date'))->locale('English');
             $dt2 = $carbon->parse($request->input('end_date'))->locale('English');
             $createPostUser = $request->all();
@@ -43,7 +44,7 @@ class PostUserController extends Controller
             $post_user = PostUser::create($createPostUser);
             $getLocation = new Helpers();
             $mexico = $getLocation->getLOcation($request->input('localidad_id'));
-            $query = Address::create([
+            $address = Address::create([
                 'user_id' => $request->input('user_id'),
                 'post_user_id' => $post_user->id,
                 'clave' => $mexico['clave'],
@@ -54,18 +55,15 @@ class PostUserController extends Controller
                 'lng' => $mexico['lng'],
                 'address' => $request->input('address'),
             ]);
-
-            if($query) {
-                return response()->json(['valid' => true, 'message' => 'post wass created successfully'],200);
+            if($address) {
+                return ['valid' => true, 'message' => 'post wass created successfully'];
             }
-        }
+        });
+        return response()->json($query);
     }
 
-    public function getPostUser(Request $request, $id) {
-        if(!$id) {
-            return response()->json(['failed' => false],200);
-        }
-        $array_posts_user = PostUser::with('user','address')->where('user_id',$id)->orderBy('id', 'desc')->get();
+    public function getPostUser($id) {
+        $array_posts_user = PostUser::with('user', 'address')->where('user_id',$id)->orderBy('id', 'desc')->get();
         $new_array_posts_user = array();
         $getFullUser = new Helpers();
         foreach($array_posts_user as $post_user) {
@@ -97,7 +95,9 @@ class PostUserController extends Controller
         $user = auth()->user();
         $postUser = PostUser::find($id);
         $addressPostUser = Address::where('post_user_id', $postUser->id)->where('user_id',$postUser->user_id)->first();
-        return response()->json(['post' => $postUser, 'address' => $addressPostUser, 'user' => $user],500);
+        $postUser->delete();
+        $addressPostUser->delete();
+        return response()->json(['user' => $user],200);
     }
 
 }
