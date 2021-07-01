@@ -17,6 +17,7 @@ use Validator;
 
 class PostUserController extends Controller
 {
+
     public function createPostUser(Request $request) {  //Crea post usuario tipo [user]
 
         $query = \DB::transaction(function () use($request) {
