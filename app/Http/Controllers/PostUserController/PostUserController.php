@@ -46,7 +46,7 @@ class PostUserController extends Controller
             $getLocation = new Helpers();
             $mexico = $getLocation->getLOcation($request->input('localidad_id'));
             $address = Address::create([
-                'user_id' => $request->input('user_id'),
+                'user_id' => $request->user_id,
                 'post_user_id' => $post_user->id,
                 'clave' => $mexico['clave'],
                 'estado' => $mexico['municipio']['estado']['nombre'],
@@ -57,7 +57,8 @@ class PostUserController extends Controller
                 'address' => $request->input('address'),
             ]);
             if($address) {
-                return ['valid' => true, 'message' => 'post wass created successfully'];
+                $posts = $this->getPostUser($request->user_id)->original;
+                return ['valid' => true, 'message' => 'post wass created successfully', 'posts_user' => $posts];
             }
         });
         return response()->json($query);
@@ -88,7 +89,7 @@ class PostUserController extends Controller
         if(count($new_array_posts_user) > 0) {
             return response()->json(['valid' => true,'posts_user' => $new_array_posts_user],200);
         }else {
-            return response()->json(['failed' => false],200);
+            return response()->json(['valid' => false, 'posts_user' => []],200);
         }
     }
 
@@ -98,7 +99,8 @@ class PostUserController extends Controller
         $addressPostUser = Address::where('post_user_id', $postUser->id)->where('user_id',$postUser->user_id)->first();
         $postUser->delete();
         $addressPostUser->delete();
-        return response()->json(['user' => $user],200);
+        $posts = $this->getPostUser($user->id)->original;
+        return  $posts;
     }
 
 }
