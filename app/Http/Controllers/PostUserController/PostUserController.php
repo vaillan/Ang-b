@@ -66,26 +66,8 @@ class PostUserController extends Controller
 
     public function getPostUser($id) {
         $array_posts_user = PostUser::with('user', 'address')->where('user_id',$id)->orderBy('id', 'desc')->get();
-        $new_array_posts_user = array();
-        $getFullUser = new Helpers();
-        foreach($array_posts_user as $post_user) {
-            $post = [
-                'budget_maximum' => $post_user->budget_maximum,
-                'budget_minimum' => $post_user->budget_minimum,
-                'created_at' => $post_user->created_at,
-                'description' => $post_user->description,
-                'divisa_budget_maximum' => $post_user->divisa_budget_maximum,
-                'divisa_budget_minimum' => $post_user->divisa_budget_minimum,
-                'end_date' => $post_user->end_date,
-                'id' => $post_user->id,
-                'init_date' => $post_user->init_date,
-                'updated_at' => $post_user->updated_at,
-                'user' => $user = $getFullUser->getUserInfo($post_user->user),
-                'user_id' => $post_user->user_id,
-                'address' =>  $post_user->address,
-            ];
-            $new_array_posts_user[] = $post;
-        }
+        $helperService = new Helpers();
+        $new_array_posts_user = $helperService->mapPostUsers($array_posts_user);
         if(count($new_array_posts_user) > 0) {
             return response()->json(['valid' => true,'posts_user' => $new_array_posts_user],200);
         }else {
@@ -103,4 +85,14 @@ class PostUserController extends Controller
         return  $posts;
     }
 
+    public function getAllPostUsers() {
+        $post_users = PostUser::with('user', 'address')->get();
+        $helperService = new Helpers();
+        $new_array_posts_user = $helperService->mapPostUsers($post_users);
+        if(count($new_array_posts_user) > 0) {
+            return response()->json(['valid' => true, 'users' => $new_array_posts_user],200);
+        }else {
+            return response()->json(['valid' => false, 'users' => []], 200);
+        }
+    }
 }
