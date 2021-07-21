@@ -90,9 +90,9 @@ class PostUserController extends Controller
         $helperService = new Helpers();
         $new_array_posts_user = $helperService->mapPostUsers($post_users);
         if(count($new_array_posts_user) > 0) {
-            return response()->json(['valid' => true, 'users' => $new_array_posts_user],200);
+            return response()->json(['valid' => true, 'post_users' => $new_array_posts_user],200);
         }else {
-            return response()->json(['valid' => false, 'users' => []], 200);
+            return response()->json(['valid' => false, 'post_users' => []], 200);
         }
     }
 }
