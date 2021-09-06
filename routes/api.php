@@ -7,6 +7,10 @@ use App\Http\Controllers\PostUserController\PostUserController;
 use App\Http\Controllers\PostClientController\PostClientController;
 use App\Http\Controllers\UserController\UserController;
 use App\Http\Controllers\LocalidadController\LocalidadController;
+use App\Http\Controllers\DepartamentController\DepartamentController;
+use App\Http\Controllers\GroundController\GroundController;
+use App\Http\Controllers\HouseController\HouseController;
+use App\Http\Controllers\OfficeController\OfficeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +36,8 @@ Route::group([
         Route::post('/update-image', [AuthController::class, 'updateImageUser']);
         Route::post('/update', [AuthController::class, 'update']);
 
+        //property
+        Route::get('get-house-type', [HouseController::class, 'getHouseType']);
         //Post user
         Route::get('/get-posts-user/{id}', [PostUserController::class, 'getPostUser']);
         Route::post('/post-user', [PostUserController::class,'createPostUser']);
