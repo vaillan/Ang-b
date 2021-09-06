@@ -38,6 +38,10 @@ Route::group([
 
         //property
         Route::get('get-house-type', [HouseController::class, 'getHouseType']);
+        Route::get('get-departament-type', [DepartamentController::class, 'getDepartamentType']);
+        Route::get('get-office-type', [OfficeController::class, 'getOfficeType']);
+        Route::get('get-ground-type', [GroundController::class, 'getGroundType']);
+        
         //Post user
         Route::get('/get-posts-user/{id}', [PostUserController::class, 'getPostUser']);
         Route::post('/post-user', [PostUserController::class,'createPostUser']);

@@ -9,6 +9,10 @@ class GroundController extends Controller
 {
     public function getGroundType() {
         $ground = Ground::all();
-        return $ground;
+        if($ground) {
+            return response()->json(['valid' => true, 'ground_type' => $ground],200);
+        }else {
+            return response()->json(['valid' => false, 'ground_type' => []],200);
+        }
     }
 }

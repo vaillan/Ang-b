@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\Departament\Departament;
 class DepartamentController extends Controller
 {
-    public function getGroundType() {
+    public function getDepartamentType() {
         $departament = Departament::all();
-        return $departament;
+        if($departament) {
+            return response()->json(['valid' => true, 'departament_type' => $departament],200);
+        }else {
+            return response()->json(['valid' => false, 'departament_type' => []],200);
+        }
     }
 }

@@ -9,6 +9,10 @@ class OfficeController extends Controller
 {
     public function getOfficeType() {
         $office = Office::all();
-        return $office;
+        if($office) {
+            return response()->json(['valid' => true, 'office_type' => $office],200);
+        }else {
+            return response()->json(['valid' => false, 'office_type' => []],200);
+        }
     }
 }
