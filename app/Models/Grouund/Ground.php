@@ -13,6 +13,6 @@ class Ground extends Model
     protected $table = 'ground';
 
     protected $fillable = [
-    'ground_type',
+        'ground_type',
     ];
 }

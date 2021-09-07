@@ -14,6 +14,6 @@ class House extends Model
     protected $table = 'house';
 
     protected $fillable = [
-    'house_type',
+        'house_type',
     ];
 }
