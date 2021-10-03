@@ -14,7 +14,7 @@ use App\Http\Controllers\OfficeController\OfficeController;
 use App\Http\Controllers\ServiceController\ServiceController;
 use App\Http\Controllers\GeneralCategoryController\GeneralCategoryController;
 use App\Http\Controllers\ExteriorController\ExteriorController;
-
+use App\Models\ConservationState\ConservationState;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -63,5 +63,8 @@ Route::group([
         
         //Exterios
         Route::get('/get-exteriors', [ExteriorController::class, 'getExteriors']);
+        
+        //ConservationState
+        Route::get('/get-conservation-state', [ConservationState::class, 'getConservationState']);
     });
 });
