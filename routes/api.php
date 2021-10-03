@@ -11,7 +11,8 @@ use App\Http\Controllers\DepartamentController\DepartamentController;
 use App\Http\Controllers\GroundController\GroundController;
 use App\Http\Controllers\HouseController\HouseController;
 use App\Http\Controllers\OfficeController\OfficeController;
-
+use App\Http\Controllers\ServiceController\ServiceController;
+use App\Http\Controllers\GeneralCategoryController\GeneralCategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -51,5 +52,11 @@ Route::group([
         Route::post('/post-user-client', [PostClientController::class, 'createPostClient']);
         //Mexico address
         Route::post('/search-mexico-localidades', [LocalidadController::class,'searchMexicoLocalidades']);
+
+        //PropertyService
+        Route::get('/get-property-services', [ServiceController::class, 'getServicesProperty']);
+        
+        //GeneralCategories
+        Route::get('get-general-categories',[GeneralCategoryController::class, 'getGeneralCategories']);
     });
 });
