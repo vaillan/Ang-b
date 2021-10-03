@@ -33,7 +33,7 @@ class PropertyServicesSeeder extends Seeder
                 'Amueblado',
                 'Escuelas cercanas'
             ],
-            'exterios' => [
+            'exteriors' => [
                 'Jardin privado',
                 'Asador',
                 'Cancha de Fútbol',

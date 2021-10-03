@@ -13,6 +13,8 @@ use App\Http\Controllers\HouseController\HouseController;
 use App\Http\Controllers\OfficeController\OfficeController;
 use App\Http\Controllers\ServiceController\ServiceController;
 use App\Http\Controllers\GeneralCategoryController\GeneralCategoryController;
+use App\Http\Controllers\ExteriorController\ExteriorController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,6 +59,9 @@ Route::group([
         Route::get('/get-property-services', [ServiceController::class, 'getServicesProperty']);
         
         //GeneralCategories
-        Route::get('get-general-categories',[GeneralCategoryController::class, 'getGeneralCategories']);
+        Route::get('/get-general-categories',[GeneralCategoryController::class, 'getGeneralCategories']);
+        
+        //Exterios
+        Route::get('/get-exteriors', [ExteriorController::class, 'getExteriors']);
     });
 });
