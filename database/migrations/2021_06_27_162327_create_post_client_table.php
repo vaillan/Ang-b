@@ -36,7 +36,6 @@ class CreatePostClientTable extends Migration
             $table->string('exteriores')->nullable(1);
             $table->string('estadoConservacion')->nullable(1);
             $table->string('leflet_map')->nullable(1);
-            $table->string('type_cost')->nullable(1);
             $table->boolean('post_client_status')->nullable(1);
             $table->unsignedInteger('num_recamaras')->nullable(1);
             $table->unsignedInteger('num_bathroom')->nullable(1);

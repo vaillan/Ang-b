@@ -19,15 +19,35 @@ class PostClient extends Model
    protected $table = 'post_client';
    
    protected $fillable = [
-   'user_id',
-   'description',
-   'services',
-   'type_post',
-   'type_cost',
-   'post_client_status',
-   'price',
-   'divisa',
+    'user_id',
+    'moneda_id',
+    'renta_opcion_id',
+    'pais',
+    'estado',
+    'ciudadMunicipio',
+    'calle',
+    'colonia',
+    'tipoInmueble',
+    'type_post',
+    'precio',
+    'descripcion',
+    'titulo',
+    'numExt',
+    'numInt',
+    'youtubeId',
+    'servicios',
+    'caracteristicasGenerales',
+    'exteriores',
+    'estadoConservacion',
+    'leflet_map',
+    'post_client_status',
+    'num_recamaras',
+    'num_bathroom',
+    'num_estacionamiento',
+    'superficie_construida',
+    'superficie_terreno',
    ];
+
    /**
     * Get the user that owns the comment.
     */
