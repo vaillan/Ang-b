@@ -16,6 +16,7 @@ class CreateRentaOpcionesTable extends Migration
         Schema::create('renta_opciones', function (Blueprint $table) {
             $table->id();
             $table->string('type_rent_option');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

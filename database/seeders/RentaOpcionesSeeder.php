@@ -19,7 +19,7 @@ class RentaOpcionesSeeder extends Seeder
         );
 
         foreach ($rentaOpciones as $rentaOpcionValue) {
-            \DB::table([
+            \DB::table('renta_opciones')->insert([
                 'type_rent_option' => $rentaOpcionValue,
             ]);
         }

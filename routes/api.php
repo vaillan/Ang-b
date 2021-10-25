@@ -14,7 +14,9 @@ use App\Http\Controllers\OfficeController\OfficeController;
 use App\Http\Controllers\ServiceController\ServiceController;
 use App\Http\Controllers\GeneralCategoryController\GeneralCategoryController;
 use App\Http\Controllers\ExteriorController\ExteriorController;
-use App\Models\ConservationState\ConservationState;
+use App\Http\Controllers\ConservationStateController\ConservationStateController;
+use App\Http\Controllers\DivisaController\DivisaController;
+use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,6 +67,12 @@ Route::group([
         Route::get('/get-exteriors', [ExteriorController::class, 'getExteriors']);
         
         //ConservationState
-        Route::get('/get-conservation-state', [ConservationState::class, 'getConservationState']);
+        Route::get('/get-conservation-state', [ConservationStateController::class, 'getConservationState']);
+        
+        //Divisas
+        Route::get('/get-divisas', [DivisaController::class, 'getDivisas']);
+        
+        //Renta opciones
+        Route::get('/get-renta-opciones', [RentaOpcionController::class, 'getRentaOpciones']);
     });
 });
