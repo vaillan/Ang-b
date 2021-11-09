@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDepartamentTable extends Migration
+class CreateExteriorsSelectedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateDepartamentTable extends Migration
      */
     public function up()
     {
-        Schema::create('departament', function (Blueprint $table) {
+        Schema::create('exteriors_selected', function (Blueprint $table) {
             $table->id();
-            $table->string('departament_type');
+            $table->unsignedBigInteger('exterior_id');
+            $table->unsignedBigInteger('post_client_id');
+            $table->foreign('exterior_id')->references('id')->on('exteriors');
+            $table->foreign('post_client_id')->references('id')->on('post_client');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +31,6 @@ class CreateDepartamentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departament');
+        Schema::dropIfExists('exteriors_selected');
     }
 }

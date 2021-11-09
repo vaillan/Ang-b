@@ -12,7 +12,8 @@ class PropertySeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    {   
+        $property_type = null;
         $typeRentsArray = array( 
             'house' =>
             [
@@ -50,35 +51,49 @@ class PropertySeeder extends Seeder
 
         );
         foreach($typeRentsArray as $keyTypeRent => $valueTypeRent) {
-            if($keyTypeRent == 'house') {
-                $table = $keyTypeRent;
-                $insertColumn = 'house_type';
-                $this->insertValuesInTable($table, $insertColumn, $valueTypeRent);
-            }
-            else if($keyTypeRent == 'departament') {
-                $table = $keyTypeRent;
-                $insertColumn = 'departament_type';
-                $this->insertValuesInTable($table, $insertColumn, $valueTypeRent);
-            }
-            else if($keyTypeRent == 'office') {
-                $table = $keyTypeRent;
-                $insertColumn = 'office_type';
-                $this->insertValuesInTable($table, $insertColumn, $valueTypeRent);
-            }
-            else if($keyTypeRent == 'ground') {
-                $table = $keyTypeRent;
-                $insertColumn = 'ground_type';
-                $this->insertValuesInTable($table, $insertColumn, $valueTypeRent);
+            switch ($keyTypeRent) {
+                case 'house':
+                    $property_type = $this->getPropertyByType('Casa');
+                    $table = $keyTypeRent;
+                    $insertColumn = 'house_type';
+                    $this->insertValuesInTable($table, $insertColumn, $valueTypeRent, $property_type->id);
+                break;
+                case 'departament':
+                    $property_type = $this->getPropertyByType('Departamento');
+                    $table = $keyTypeRent;
+                    $insertColumn = 'departament_type';
+                    $this->insertValuesInTable($table, $insertColumn, $valueTypeRent, $property_type->id);
+                break;
+                case 'office':
+                    $property_type = $this->getPropertyByType('Oficina');
+                    $table = $keyTypeRent;
+                    $insertColumn = 'office_type';
+                    $this->insertValuesInTable($table, $insertColumn, $valueTypeRent, $property_type->id);
+                break;
+                case 'ground':
+                    $property_type = $this->getPropertyByType('Terreno');
+                    $table = $keyTypeRent;
+                    $insertColumn = 'ground_type';
+                    $this->insertValuesInTable($table, $insertColumn, $valueTypeRent, $property_type->id);
+                break;
+
             }
         }
     }
-    function insertValuesInTable($table, $insertColumn, $array) {
+
+    public function insertValuesInTable($table, $insertColumn, $array, $property_type_id) {
         foreach($array as $value) {
             \DB::table($table)->insert([
+                'property_type_id' => $property_type_id,
                 $insertColumn => $value,
                 'created_at' => date('Y-m-d H:m:s'),
                 'updated_at' => date('Y-m-d H:m:s'),
             ]);
         }
+    }
+
+    public function getPropertyByType($property_type) {
+        $propertyBytype = \DB::table('property_types')->where('property_type', $property_type)->first();
+        return $propertyBytype;
     }
 }

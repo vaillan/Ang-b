@@ -15,7 +15,9 @@ class CreateHoseTable extends Migration
     {
         Schema::create('house', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('property_type_id');
             $table->string('house_type');
+            $table->foreign('property_type_id')->references('id')->on('property_types');
             $table->softDeletes();
             $table->timestamps();
         });
