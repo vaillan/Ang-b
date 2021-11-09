@@ -42,11 +42,6 @@ class CreatePostClientTable extends Migration
             $table->float('superficie_construida')->nullable(1);
             $table->float('superficie_terreno')->nullable(1);
             $table->string('otros')->nullable(1);
-            // $table->string('tipoInmueble');
-            // $table->string('servicios')->nullable(1);
-            // $table->string('caracteristicasGenerales')->nullable(1);
-            // $table->string('exteriores')->nullable(1);
-            // $table->string('estadoConservacion')->nullable(1);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('moneda_id')->references('id')->on('divisas');
             $table->foreign('renta_opcion_id')->references('id')->on('renta_opciones');
