@@ -52,6 +52,7 @@ Route::group([
         Route::post('/post-user', [PostUserController::class,'createPostUser']);
         Route::delete('/delete-post-user/{id}', [PostUserController::class,'deletePostUser']);
         Route::get('/get-all-post-users', [PostUserController::class, 'getAllPostUsers']);
+        
         //Post client
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
         //Mexico address
