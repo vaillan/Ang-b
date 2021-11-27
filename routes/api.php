@@ -31,10 +31,10 @@ use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/signup', [AuthController::class, 'signUp']);
+    Route::post('/login', [AuthController::class, 'login']);    //Rutas que no necesitan autenticación
+    Route::post('/signup', [AuthController::class, 'signUp']);   //Rutas que no necesitan autenticación
 
-    Route::group([
+    Route::group([ //Rutas que necesitan autenticación
       'middleware' => 'auth:api'
     ], function() {
         Route::get('/logout', [AuthController::class, 'logout']);

@@ -29,7 +29,6 @@ class PostClientController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required',
                 'moneda_id' => 'required',
-                'renta_opcion_id' => 'required',
                 'pais' => 'required',
                 'estado' => 'required',
                 'ciudadMunicipio' => 'required',
