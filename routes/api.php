@@ -17,6 +17,7 @@ use App\Http\Controllers\ExteriorController\ExteriorController;
 use App\Http\Controllers\ConservationStateController\ConservationStateController;
 use App\Http\Controllers\DivisaController\DivisaController;
 use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
+use App\Http\Controllers\IdiomaController\IdiomaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,8 +32,13 @@ use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
 Route::group([
     'prefix' => 'auth'
 ], function () {
+    //Inicio de sesion
     Route::post('/login', [AuthController::class, 'login']);    //Rutas que no necesitan autenticación
+    //Crear una cuenta
     Route::post('/signup', [AuthController::class, 'signUp']);   //Rutas que no necesitan autenticación
+
+    //Obtener idiomas
+    Route::get('/get-idiomas', [IdiomaController::class, 'getIdiomas']);
 
     Route::group([ //Rutas que necesitan autenticación
       'middleware' => 'auth:api'

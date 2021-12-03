@@ -17,6 +17,7 @@ class CreateIdiomasTable extends Migration
             $table->id();
             $table->string('lenguage_region_name')->nullable(0);
             $table->string('iso_code')->nullable(0);
+            $table->string('flag_link')->nullable(0);
             $table->softDeletes();
             $table->timestamps();
         });
