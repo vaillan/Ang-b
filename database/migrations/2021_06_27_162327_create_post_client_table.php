@@ -35,7 +35,7 @@ class CreatePostClientTable extends Migration
             $table->unsignedInteger('numExt')->nullable(1)->default(0);
             $table->unsignedInteger('numInt')->nullable(1)->default(0);
             $table->string('youtubeId')->nullable(1);
-            $table->string('leflet_map')->nullable(1);
+            $table->json('leflet_map')->nullable(1);
             $table->unsignedInteger('num_recamaras')->nullable(1)->default(0);
             $table->unsignedInteger('num_bathroom')->nullable(1)->default(0);
             $table->unsignedInteger('num_estacionamiento')->nullable(1)->default(0);

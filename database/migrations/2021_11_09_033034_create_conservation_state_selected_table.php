@@ -16,7 +16,9 @@ class CreateConservationStateSelectedTable extends Migration
         Schema::create('conservation_state_selected', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('conservation_state_id');
-            $table->unsignedBigInteger('post_client_id');
+            $table->unsignedBigInteger('post_client_id')->nullable(1);
+            $table->unsignedBigInteger('post_user_id')->nullable(1);
+            $table->foreign('post_user_id')->references('id')->on('post_user');
             $table->foreign('conservation_state_id')->references('id')->on('conservation_state');
             $table->foreign('post_client_id')->references('id')->on('post_client');
             $table->softDeletes();

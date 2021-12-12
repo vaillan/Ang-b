@@ -67,7 +67,7 @@ class PostClientController extends Controller
                             'post_client_id' => $postClient->id,
                             'image' => $image_full,
                         ]);
-                        $count = $count + 1;;
+                        $count = $count + 1;
                     }
                 }else {
                     return ['valid' => false, 'message' => 'Fallo al cargar imagenes'];

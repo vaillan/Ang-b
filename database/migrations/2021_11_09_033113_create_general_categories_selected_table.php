@@ -16,7 +16,9 @@ class CreateGeneralCategoriesSelectedTable extends Migration
         Schema::create('general_categories_selected', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('general_category_id');
-            $table->unsignedBigInteger('post_client_id');
+            $table->unsignedBigInteger('post_client_id')->nullable(1);
+            $table->unsignedBigInteger('post_user_id')->nullable(1);
+            $table->foreign('post_user_id')->references('id')->on('post_user');
             $table->foreign('general_category_id')->references('id')->on('general_categories');
             $table->foreign('post_client_id')->references('id')->on('post_client');
             $table->softDeletes();

@@ -16,16 +16,14 @@ class CreatePostUserTable extends Migration
         Schema::create('post_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('localidad_id');
+            $table->unsignedBigInteger('divisa_id');
             $table->float('budget_minimum');
             $table->float('budget_maximum');
             $table->date('init_date');
             $table->date('end_date');
-            $table->string('divisa_budget_minimum');
-            $table->string('divisa_budget_maximum');
             $table->text('description');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('localidad_id')->references('id')->on('localidades');
+            $table->foreign('divisa_id')->references('id')->on('divisas');
             $table->softDeletes();
             $table->timestamps();
         });
