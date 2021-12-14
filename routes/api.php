@@ -61,8 +61,7 @@ Route::group([
         
         //Post client
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
-        //Mexico address
-        Route::post('/search-mexico-localidades', [LocalidadController::class,'searchMexicoLocalidades']);
+        Route::get('/get-post-client/{id}/{property_type_id?}',[PostClientController::class, 'getAllPostsEnterpriseByUser']);
 
         //PropertyService
         Route::get('/get-property-services', [ServiceController::class, 'getServicesProperty']);
