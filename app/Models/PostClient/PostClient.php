@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Departament\Departament;
+use App\Models\RentaOpcion\RentaOpcion;
+use App\Models\Divisa\Divisa;
 use App\Models\Office\Office;
 use App\Models\Grouund\Ground;
 use App\Models\House\House;
@@ -73,5 +75,13 @@ class PostClient extends Model
 
     public function ground() {
         return $this->belongsTo(Ground::class, 'ground_id');
+    }
+
+    public function rent() {
+        return $this->belongsTo(RentaOpcion::class, 'renta_opcion_id');
+    }
+
+    public function divisa() {
+        return $this->belongsTo(Divisa::class, 'moneda_id');
     }
 }

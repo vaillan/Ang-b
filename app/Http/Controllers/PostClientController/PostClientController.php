@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\PostClientController;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\PostClient\PostClient;
-use App\Models\Images\Images;
-use App\Helpers\Helpers;
 use App\Http\Controllers\ServiceSelectedController\ServiceSelectedController;
 use App\Http\Controllers\ExteriorSelectedController\ExteriorSelectedController;
 use App\Http\Controllers\ConservationStateSelectedController\ConservationStateSelectedController;
 use App\Http\Controllers\GeneralCategorySelectedController\GeneralCategorySelectedController;
-use App\Models\User;
 use App\Models\PropertyType\PropertyType;
+use App\Http\Controllers\Controller;
+use App\Models\PostClient\PostClient;
+use Illuminate\Http\Request;
+use App\Models\Images\Images;
+use App\Helpers\Helpers;
+use App\Models\User;
 use Exception;
 use Validator;
 use File;
@@ -117,30 +117,30 @@ class PostClientController extends Controller
         return $postClient;
     }
 
-    public function getAllPostsEnterpriseByUser(Request $request, $id, $property_type_id = null) {
-        $query = \DB::transaction(function () use($request, $id, $property_type_id) {
+    public function getAllPostsEnterpriseByUser(Request $request, $id, $type_post=null, $property_type_id=null) {
+        $query = \DB::transaction(function () use($request, $id, $property_type_id, $type_post) {
             if(!$property_type_id) {
-                $query =  $this->getTypePost($id);
+                $query =  $this->getTypePost($id, null, $type_post);
                 return response()->json(['valid'=> true, 'posts' => $query ]);
             }else {
                 switch ($property_type_id) {
                     case 1:
-                        $query =  $this->getTypePost($id, $property_type_id);
+                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
                         return response()->json(['valid'=> true, 'posts' => $query ]);
                     break;
                     
                     case 2:
-                        $query =  $this->getTypePost($id, $property_type_id);
+                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
                         return response()->json(['valid'=> true, 'posts' => $query ]);
                     break;
     
                     case 3:  
-                        $query =  $this->getTypePost($id, $property_type_id);
+                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
                         return response()->json(['valid'=> true, 'posts' => $query ]);
                     break;
     
                     case 4:
-                        $query =  $this->getTypePost($id, $property_type_id);
+                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
                         return response()->json(['valid'=> true, 'posts' => $query ]);
                     break;
                 }
@@ -149,58 +149,66 @@ class PostClientController extends Controller
         return $query;
     }
 
-    public function getTypePost($id, $property_type_id = null) {
+    public function getTypePost($id, $property_type_id = null, $type_post=null) {
         $posts = null;
         $property = $property_type_id ? PropertyType::with(['house', 'departament', 'office', 'ground'])->find($property_type_id) : null;
         if($property) {
             if(count($property->house) > 0) {
-                $property_type = ["user","house"];
-                $posts = $this->getPost($property_type, $id);
+                $property_type = ["user", "house"];
+                $posts = $this->getPost($property_type, $id, $type_post);
                 $houses = array_column($posts, $property_type[1]);
                 $houses = array_column($houses, 'id');
+                $property_type[] = "divisa";
+                $property_type[] = "rent";
                 $posts = PostClient::with($property_type)->whereIn('house_id', $houses)->get();
-            }else if (isset($property) &&  count($property->departament) > 0) {
-                $property_type = ["user","departament"];
-                $posts = $this->getPost($property_type, $id);
+            }else if (count($property->departament) > 0) {
+                $property_type = ["user", "departament"];
+                $posts = $this->getPost($property_type, $id, $type_post);
                 $departaments = array_column($posts, $property_type[1]);
                 $departaments = array_column($departaments, 'id');
+                $property_type[] = "divisa";
+                $property_type[] = "rent";
                 $posts = PostClient::with($property_type)->whereIn('departament_id', $departaments)->get();
-            }else if(isset($property) &&  count($property->office) > 0) {
-                $property_type = ["user","office"];
-                $posts = $this->getPost($property_type, $id);
+            }else if(count($property->office) > 0) {
+                $property_type = ["user", "office"];
+                $posts = $this->getPost($property_type, $id, $type_post);
                 $offices = array_column($posts, $property_type[1]);
                 $offices = array_column($offices, 'id');
+                $property_type[] = "divisa";
+                $property_type[] = "rent";
                 $posts = PostClient::with($property_type)->whereIn('office_id', $offices)->get();  
     
-            }else if(isset($property) &&  count($property->ground) > 0) {
-                $property_type = ["user","ground"];
-                $posts = $this->getPost($property_type, $id);
+            }else if(count($property->ground) > 0) {
+                $property_type = ["user", "ground"];
+                $posts = $this->getPost($property_type, $id, $type_post);
                 $grounds = array_column($posts, $property_type[1]);
                 $grounds = array_column($grounds, 'id');
+                $property_type[] = "divisa";
+                $property_type[] = "rent";
                 $posts = PostClient::with($property_type)->whereIn('house_id', $grounds)->get();  
             }
         }
         else {
-            $property_type = "user";
+            $property_type = ["user", "rent", "divisa"];
             $_posts = [];
-            $posts = $this->getPost($property_type, $id);
+            $posts = $this->getPost($property_type, $id, $type_post);
             $otros = array_column($posts, 'otros');
             foreach ($otros as $key => $value) {
                 if(!empty($value)) {
                     $_posts[] = $posts[$key];
                 }
             }
-            if(count($_posts) < 0 ) {
-                return $_posts;
-            }else {
-                return $_posts;
-            }
+            return $_posts; 
         }
-        return $posts;
+        if($posts) {
+            return $posts;
+        }
     }
 
-    public function getPost($property, $id) {
-        $posts = PostClient::with($property)->where('user_id', $id)
+    public function getPost($property, $id, $type_post=null) {
+        $posts = PostClient::with($property)
+        ->where('type_post', $type_post)
+        ->where('user_id', $id)
         ->get();
         return $posts->toArray();
     }
