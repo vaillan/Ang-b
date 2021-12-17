@@ -17,6 +17,7 @@ class CreateImagesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('post_client_id');
             $table->string('image');
+            $table->string('url')->nullable(1);
             $table->foreign('post_client_id')->references('id')->on('post_client');
             $table->softDeletes();
             $table->timestamps();

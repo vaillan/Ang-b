@@ -24,9 +24,21 @@ class ExteriorSelectedController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $postUserEnterprise=null, $postUserPremium=null)
     {
-        //
+        $query = \DB::transaction(function () use($request, $postUserEnterprise, $postUserPremium) {
+            $exteriorServicesSelected = json_decode($request->exteriores);
+            if(isset($exteriorServicesSelected)) {
+                foreach ($exteriorServicesSelected as $service) {
+                    ExteriorSelected::create([
+                        'exterior_id' => $service->id,
+                        'post_client_id' => isset($postUserEnterprise) ? $postUserEnterprise->id : null,
+                        'post_user_id' => isset($postUserPremium) ? $postUserPremium->id : null,
+                    ]);
+                }
+            }
+        });
+        return $query;
     }
 
     /**
@@ -63,15 +75,4 @@ class ExteriorSelectedController extends Controller
         //
     }
 
-    public function createExteriorService($postClient, $exteriorServicesSelected) {
-        $query = \DB::transaction(function () use($postClient, $exteriorServicesSelected) {
-            foreach ($exteriorServicesSelected as $service) {
-                ExteriorSelected::create([
-                    'exterior_id' => $service->id,
-                    'post_client_id' => $postClient->id,
-                ]);
-            }
-        });
-        return $query;
-    }
 }

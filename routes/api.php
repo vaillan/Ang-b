@@ -62,7 +62,7 @@ Route::group([
         //Post client is doing reference to user enterprise
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
         Route::get('/get-post-client/{id}/{type_post?}/{property_type_id?}',[PostClientController::class, 'getAllPostsEnterpriseByUser']);
-
+        Route::delete('delete-post-user-enterprise/{id}', [PostClientController::class, 'deletePostUserEnterprise']);
         //PropertyService
         Route::get('/get-property-services', [ServiceController::class, 'getServicesProperty']);
         

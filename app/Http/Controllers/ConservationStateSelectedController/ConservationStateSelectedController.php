@@ -24,9 +24,21 @@ class ConservationStateSelectedController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $postUserEnterprise=null, $postUserPremium=null)
     {
-        //
+        $query = \DB::transaction(function () use($request, $postUserEnterprise, $postUserPremium) {
+            $conservationStateServicesSelected = json_decode($request->estado_conservacion);
+            if(isset($conservationStateServicesSelected)) {
+                foreach ($conservationStateServicesSelected as $service) {
+                    ConservationStateSelected::create([
+                        'conservation_state_id' => $service->id,
+                        'post_client_id' => isset($postUserEnterprise) ? $postUserEnterprise->id : null,
+                        'post_user_id' => isset($postUserPremium) ? $postUserPremium->id : null,
+                    ]);
+                }
+            }
+        });
+        return $query;
     }
 
     /**
@@ -61,17 +73,5 @@ class ConservationStateSelectedController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function createConservationStateService($postClient, $conservationStateServicesSelected) {
-        $query = \DB::transaction(function () use($postClient, $conservationStateServicesSelected) {
-            foreach ($conservationStateServicesSelected as $service) {
-                ConservationStateSelected::create([
-                    'conservation_state_id' => $service->id,
-                    'post_client_id' => $postClient->id,
-                ]);
-            }
-        });
-        return $query;
     }
 }

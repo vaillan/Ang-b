@@ -2,6 +2,7 @@
 
 namespace App\Models\ExteriorSelected;
 
+use App\Models\Exterior\Exterior;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,5 +17,11 @@ class ExteriorSelected extends Model
     protected $fillable = [
         'exterior_id',
         'post_client_id',
+        'post_user_id',
     ];
+
+    public function exterior() 
+    {
+        return $this->belongsTo(Exterior::class, 'exterior_id', 'id');   
+    }
 }

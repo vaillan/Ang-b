@@ -24,9 +24,21 @@ class GeneralCategorySelectedController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $postUserEnterprise=null, $postUserPremium=null)
     {
-        //
+        $query = \DB::transaction(function () use($request, $postUserEnterprise, $postUserPremium) {
+            $caracteristicasGenerales = json_decode($request->caracteristicasGenerales);
+            if(isset($caracteristicasGenerales)) {
+                foreach ($caracteristicasGenerales as $service) {
+                    GeneralCategorySelected::create([
+                        'general_category_id' => $service->id,
+                        'post_client_id' => isset($postUserEnterprise) ? $postUserEnterprise->id : null,
+                        'post_user_id' => isset($postUserPremium) ? $postUserPremium->id : null,
+                    ]);
+                }
+            }
+        });
+        return $query;
     }
 
     /**
@@ -58,20 +70,17 @@ class GeneralCategorySelectedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($post_client_id=null, $post_user_id=null)
     {
-        //
-    }
-
-    public function createGeneralCategoryService($postClient, $generalCategoryServicesSelected) {
-        $query = \DB::transaction(function () use($postClient, $generalCategoryServicesSelected) {
-            foreach ($generalCategoryServicesSelected as $service) {
-                GeneralCategorySelected::create([
-                    'general_category_id' => $service->id,
-                    'post_client_id' => $postClient->id,
-                ]);
+        $query = \DB::transaction(function () use ($post_client_id, $post_user_id) {
+            $GeneralCategories = GeneralCategorySelected::where('post_client_id', $post_client_id)
+            ->orWhere('post_user_id', $post_user_id)
+            ->get();
+            foreach ($GeneralCategories as $GeneralCategory) {
+                $GeneralCategory->delete();
             }
         });
         return $query;
     }
+
 }
