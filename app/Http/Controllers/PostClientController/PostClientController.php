@@ -17,6 +17,7 @@ use App\Models\User;
 use Exception;
 use Validator;
 use File;
+use Illuminate\Support\Facades\Auth;
 
 class PostClientController extends Controller
 {
@@ -114,33 +115,14 @@ class PostClientController extends Controller
         return $postClient;
     }
 
-    public function getAllPostsEnterpriseByUser(Request $request, $id, $type_post=null, $property_type_id=null) {
+    public function getAllPostsEnterpriseByUser(Request $request, $id, $type_post, $property_type_id=null) {
         $query = \DB::transaction(function () use($request, $id, $property_type_id, $type_post) {
             if(!$property_type_id) {
                 $query =  $this->getTypePost($id, null, $type_post);
                 return response()->json(['valid'=> true, 'posts' => $query ]);
             }else {
-                switch ($property_type_id) {
-                    case 1:
-                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
-                        return response()->json(['valid'=> true, 'posts' => $query ]);
-                    break;
-                    
-                    case 2:
-                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
-                        return response()->json(['valid'=> true, 'posts' => $query ]);
-                    break;
-    
-                    case 3:  
-                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
-                        return response()->json(['valid'=> true, 'posts' => $query ]);
-                    break;
-    
-                    case 4:
-                        $query =  $this->getTypePost($id, $property_type_id, $type_post);
-                        return response()->json(['valid'=> true, 'posts' => $query ]);
-                    break;
-                }
+                $query =  $this->getTypePost($id, $property_type_id, $type_post);
+                return response()->json(['valid'=> true, 'posts' => $query ]);
             }
         });
         return $query;
@@ -151,69 +133,69 @@ class PostClientController extends Controller
         $property = $property_type_id ? PropertyType::with(['house', 'departament', 'office', 'ground'])->find($property_type_id) : null;
         if($property) {
             if(count($property->house) > 0) {
-                $property_type = ["user", "house"];
-                $posts = $this->getPost($property_type, $id, $type_post);
-                $houses = array_column($posts, $property_type[1]);
+                $models_selected = ["user", "house"];
+                $posts = $this->getPost($models_selected, $id, $type_post);
+                $houses = array_column($posts, $models_selected[1]);
                 $houses = array_column($houses, 'id');
                 if(count($houses) > 0) {
-                    $property_type[] = "divisa";
-                    $property_type[] = "rent";
-                    $property_type[] = "images";
-                    $property_type[] = "services";
-                    $property_type[] = "generalCategories";
-                    $property_type[] = "conservationState";
-                    $posts = PostClient::with($property_type)->whereIn('house_id', $houses)->get();
+                    $models_selected[] = "divisa";
+                    $models_selected[] = "rent";
+                    $models_selected[] = "images";
+                    $models_selected[] = "services";
+                    $models_selected[] = "generalCategories";
+                    $models_selected[] = "conservationState";
+                    $posts = PostClient::with($models_selected)->whereIn('house_id', $houses)->get();
                     return $posts;
                 }else {
                     return [];
                 }
             }else if (count($property->departament) > 0) {
-                $property_type = ["user", "departament"];
-                $posts = $this->getPost($property_type, $id, $type_post);
-                $departaments = array_column($posts, $property_type[1]);
+                $models_selected = ["user", "departament"];
+                $posts = $this->getPost($models_selected, $id, $type_post);
+                $departaments = array_column($posts, $models_selected[1]);
                 $departaments = array_column($departaments, 'id');
                 if(count($departaments) > 0) {
-                    $property_type[] = "divisa";
-                    $property_type[] = "rent";
-                    $property_type[] = "images";
-                    $property_type[] = "services";
-                    $property_type[] = "generalCategories";
-                    $property_type[] = "conservationState";
-                    $posts = PostClient::with($property_type)->whereIn('departament_id', $departaments)->get();
+                    $models_selected[] = "divisa";
+                    $models_selected[] = "rent";
+                    $models_selected[] = "images";
+                    $models_selected[] = "services";
+                    $models_selected[] = "generalCategories";
+                    $models_selected[] = "conservationState";
+                    $posts = PostClient::with($models_selected)->whereIn('departament_id', $departaments)->get();
                     return $posts;
                 }else {
                     return [];
                 }
             }else if(count($property->office) > 0) {
-                $property_type = ["user", "office"];
-                $posts = $this->getPost($property_type, $id, $type_post);
-                $offices = array_column($posts, $property_type[1]);
+                $models_selected = ["user", "office"];
+                $posts = $this->getPost($models_selected, $id, $type_post);
+                $offices = array_column($posts, $models_selected[1]);
                 $offices = array_column($offices, 'id');
                 if(count($offices) > 0) {
-                    $property_type[] = "divisa";
-                    $property_type[] = "rent";
-                    $property_type[] = "images";
-                    $property_type[] = "services";
-                    $property_type[] = "generalCategories";
-                    $property_type[] = "conservationState";
-                    $posts = PostClient::with($property_type)->whereIn('office_id', $offices)->get();  
+                    $models_selected[] = "divisa";
+                    $models_selected[] = "rent";
+                    $models_selected[] = "images";
+                    $models_selected[] = "services";
+                    $models_selected[] = "generalCategories";
+                    $models_selected[] = "conservationState";
+                    $posts = PostClient::with($models_selected)->whereIn('office_id', $offices)->get();  
                     return $posts;
                 }else {
                     return [];
                 }
             }else if(count($property->ground) > 0) {
-                $property_type = ["user", "ground"];
-                $posts = $this->getPost($property_type, $id, $type_post);
-                $grounds = array_column($posts, $property_type[1]);
+                $models_selected = ["user", "ground"];
+                $posts = $this->getPost($models_selected, $id, $type_post);
+                $grounds = array_column($posts, $models_selected[1]);
                 $grounds = array_column($grounds, 'id');
                 if(count($grounds) > 0) {
-                    $property_type[] = "divisa";
-                    $property_type[] = "rent";
-                    $property_type[] = "images";
-                    $property_type[] = "services";
-                    $property_type[] = "generalCategories";
-                    $property_type[] = "conservationState";
-                    $posts = PostClient::with($property_type)->whereIn('house_id', $grounds)->get();  
+                    $models_selected[] = "divisa";
+                    $models_selected[] = "rent";
+                    $models_selected[] = "images";
+                    $models_selected[] = "services";
+                    $models_selected[] = "generalCategories";
+                    $models_selected[] = "conservationState";
+                    $posts = PostClient::with($models_selected)->whereIn('house_id', $grounds)->get();  
                     return $posts;
                 }else {
                     return [];
@@ -221,9 +203,9 @@ class PostClientController extends Controller
             }
         }
         else {
-            $property_type = ["user", "images", "services", "generalCategories", "conservationState", "rent", "divisa"];
+            $models_selected = ["user", "images", "services", "generalCategories", "conservationState", "rent", "divisa"];
             $_posts = [];
-            $posts = $this->getPost($property_type, $id, $type_post);
+            $posts = $this->getPost($models_selected, $id, $type_post);
             $otros = array_column($posts, 'otros');
             foreach ($otros as $key => $value) {
                 if(!empty($value) && $value !== "null") {
@@ -242,14 +224,26 @@ class PostClientController extends Controller
         return $posts->toArray();
     }
 
-    public function deletePostUserEnterprise(Request $request, $id) {
-        $query = \DB::transaction(function () use($request, $id) {
-            $postUserEnterprise = PostClient::find($id);
+    public function deletePostUserEnterprise(Request $request, $post_id, $type_post, $property_type_id=null) {
+        $query = \DB::transaction(function () use($request, $post_id, $type_post, $property_type_id) {
+            $user = Auth::user();
+            $serviceSelected = new ServiceSelectedController();
+            $exteriorSelected = new ExteriorSelectedController();
+            $conservationStateSelected = new ConservationStateSelectedController();
+            $generalCategorySelected = new GeneralCategorySelectedController();
+            $postUserEnterprise = PostClient::find($post_id);
             $images = Images::where('post_client_id', $postUserEnterprise->id)->get();
             foreach ($images as $image) {
                 $image->delete();
             }
-
+            $serviceSelected->destroy($postUserEnterprise->id);
+            $exteriorSelected->destroy($postUserEnterprise->id);
+            $conservationStateSelected->destroy($postUserEnterprise->id);
+            $generalCategorySelected->destroy($postUserEnterprise->id);
+            $postUserEnterprise->delete();
+            $getPosts = $this->getAllPostsEnterpriseByUser($request, $user->id, $type_post, $property_type_id);
+            return $getPosts;
         });
+        return $query;
     }
 }

@@ -70,8 +70,16 @@ class ConservationStateSelectedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($post_client_id=null, $post_user_id=null)
     {
-        //
+        $query = \DB::transaction(function () use ($post_client_id, $post_user_id) {
+            $conservationState = ConservationStateSelected::where('post_client_id', $post_client_id)
+            ->orWhere('post_user_id', $post_user_id)
+            ->get();
+            foreach ($conservationState as $conservation) {
+                $conservation->delete();
+            }
+        });
+        return $query;
     }
 }

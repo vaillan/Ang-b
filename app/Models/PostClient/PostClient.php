@@ -60,7 +60,7 @@ class PostClient extends Model
     ];
 
     /**
-    * Get the user that owns the comment.
+    * Get the user.
     */
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
@@ -95,7 +95,7 @@ class PostClient extends Model
     }
 
     /**
-     * Get all of the deployments for the project.
+     * Get the property selected.
     */
     public function services()
     {
