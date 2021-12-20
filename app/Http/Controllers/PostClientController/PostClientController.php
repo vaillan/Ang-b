@@ -115,87 +115,107 @@ class PostClientController extends Controller
         return $postClient;
     }
 
-    public function getAllPostsEnterpriseByUser(Request $request, $id, $type_post, $property_type_id=null) {
-        $query = \DB::transaction(function () use($request, $id, $property_type_id, $type_post) {
+    public function getEnterprisePostsByUser(Request $request, $user_id, $type_post, $property_type_id=null, $post_id=null) {
+        $query = \DB::transaction(function () use($request, $user_id, $property_type_id, $type_post, $post_id) {
             if(!$property_type_id) {
-                $query =  $this->getTypePost($id, null, $type_post);
+                $query =  $this->getTypePost($user_id, null, $type_post, $post_id);
                 return response()->json(['valid'=> true, 'posts' => $query ]);
             }else {
-                $query =  $this->getTypePost($id, $property_type_id, $type_post);
+                $query =  $this->getTypePost($user_id, $property_type_id, $type_post, $post_id);
                 return response()->json(['valid'=> true, 'posts' => $query ]);
             }
         });
         return $query;
     }
 
-    public function getTypePost($id, $property_type_id=null, $type_post=null) {
+    public function getTypePost($user_id, $property_type_id=null, $type_post=null, $post_id=null) {
         $posts = null;
         $property = $property_type_id ? PropertyType::with(['house', 'departament', 'office', 'ground'])->find($property_type_id) : null;
         if($property) {
             if(count($property->house) > 0) {
                 $models_selected = ["user", "house"];
-                $posts = $this->getPost($models_selected, $id, $type_post);
+                $posts = $this->getPost($models_selected, $user_id, $type_post, $post_id);
                 $houses = array_column($posts, $models_selected[1]);
-                $houses = array_column($houses, 'id');
-                if(count($houses) > 0) {
+                $houses_ids = array_column($houses, 'id');
+                if(count($houses_ids) > 0) {
                     $models_selected[] = "divisa";
                     $models_selected[] = "rent";
                     $models_selected[] = "images";
-                    $models_selected[] = "services";
-                    $models_selected[] = "generalCategories";
-                    $models_selected[] = "conservationState";
-                    $posts = PostClient::with($models_selected)->whereIn('house_id', $houses)->get();
+                    if(!empty($post_id)) {
+                        $models_selected[] = "services";
+                        $models_selected[] = "generalCategories";
+                        $models_selected[] = "conservationState";
+                    }
+                    $posts = PostClient::with($models_selected)->whereIn('house_id', $houses_ids)
+                    ->when($post_id, function($query) use ($post_id) {
+                        return $query->where('id', $post_id);
+                    })->get();
                     return $posts;
                 }else {
                     return [];
                 }
             }else if (count($property->departament) > 0) {
                 $models_selected = ["user", "departament"];
-                $posts = $this->getPost($models_selected, $id, $type_post);
+                $posts = $this->getPost($models_selected, $user_id, $type_post, $post_id);
                 $departaments = array_column($posts, $models_selected[1]);
-                $departaments = array_column($departaments, 'id');
-                if(count($departaments) > 0) {
+                $departaments_id = array_column($departaments, 'id');
+                if(count($departaments_id) > 0) {
                     $models_selected[] = "divisa";
                     $models_selected[] = "rent";
                     $models_selected[] = "images";
-                    $models_selected[] = "services";
-                    $models_selected[] = "generalCategories";
-                    $models_selected[] = "conservationState";
-                    $posts = PostClient::with($models_selected)->whereIn('departament_id', $departaments)->get();
+                    if(!empty($post_id)) {
+                        $models_selected[] = "services";
+                        $models_selected[] = "generalCategories";
+                        $models_selected[] = "conservationState";
+                    }
+                    $posts = PostClient::with($models_selected)->whereIn('departament_id', $departaments_id)
+                    ->when($post_id, function($query) use ($post_id) {
+                        return $query->where('id', $post_id);
+                    })->get();
                     return $posts;
                 }else {
                     return [];
                 }
             }else if(count($property->office) > 0) {
                 $models_selected = ["user", "office"];
-                $posts = $this->getPost($models_selected, $id, $type_post);
+                $posts = $this->getPost($models_selected, $user_id, $type_post, $post_id);
                 $offices = array_column($posts, $models_selected[1]);
                 $offices = array_column($offices, 'id');
                 if(count($offices) > 0) {
                     $models_selected[] = "divisa";
                     $models_selected[] = "rent";
                     $models_selected[] = "images";
-                    $models_selected[] = "services";
-                    $models_selected[] = "generalCategories";
-                    $models_selected[] = "conservationState";
-                    $posts = PostClient::with($models_selected)->whereIn('office_id', $offices)->get();  
+                    if(!empty($post_id)) {
+                        $models_selected[] = "services";
+                        $models_selected[] = "generalCategories";
+                        $models_selected[] = "conservationState";
+                    }
+                    $posts = PostClient::with($models_selected)->whereIn('office_id', $offices)
+                    ->when($post_id, function($query) use ($post_id) {
+                        return $query->where('id', $post_id);
+                    })->get();  
                     return $posts;
                 }else {
                     return [];
                 }
             }else if(count($property->ground) > 0) {
                 $models_selected = ["user", "ground"];
-                $posts = $this->getPost($models_selected, $id, $type_post);
+                $posts = $this->getPost($models_selected, $user_id, $type_post, $post_id);
                 $grounds = array_column($posts, $models_selected[1]);
                 $grounds = array_column($grounds, 'id');
                 if(count($grounds) > 0) {
                     $models_selected[] = "divisa";
                     $models_selected[] = "rent";
                     $models_selected[] = "images";
-                    $models_selected[] = "services";
-                    $models_selected[] = "generalCategories";
-                    $models_selected[] = "conservationState";
-                    $posts = PostClient::with($models_selected)->whereIn('house_id', $grounds)->get();  
+                    if(!empty($post_id)) {
+                        $models_selected[] = "services";
+                        $models_selected[] = "generalCategories";
+                        $models_selected[] = "conservationState";
+                    }
+                    $posts = PostClient::with($models_selected)->whereIn('house_id', $grounds)
+                    ->when($post_id, function($query) use ($post_id) {
+                        return $query->where('id', $post_id);
+                    })->get();  
                     return $posts;
                 }else {
                     return [];
@@ -203,9 +223,14 @@ class PostClientController extends Controller
             }
         }
         else {
-            $models_selected = ["user", "images", "services", "generalCategories", "conservationState", "rent", "divisa"];
+            $models_selected = ["user", "images", "rent", "divisa"];
             $_posts = [];
-            $posts = $this->getPost($models_selected, $id, $type_post);
+            if(!empty($post_id)) {
+                $models_selected[] = "services";
+                $models_selected[] = "generalCategories";
+                $models_selected[] = "conservationState";
+            }
+            $posts = $this->getPost($models_selected, $user_id, $type_post, $post_id);
             $otros = array_column($posts, 'otros');
             foreach ($otros as $key => $value) {
                 if(!empty($value) && $value !== "null") {
@@ -216,10 +241,13 @@ class PostClientController extends Controller
         }
     }
 
-    public function getPost($property, $id, $type_post=null) {
+    public function getPost($property, $user_id, $type_post=null, $post_id=null) {
         $posts = PostClient::with($property)
         ->where('type_post', $type_post)
-        ->where('user_id', $id)
+        ->where('user_id', $user_id)
+        ->when($post_id, function($query) use($post_id) {
+            return $query->where('id', $post_id);
+        })
         ->get();
         return $posts->toArray();
     }
