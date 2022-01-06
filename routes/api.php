@@ -18,6 +18,7 @@ use App\Http\Controllers\ConservationStateController\ConservationStateController
 use App\Http\Controllers\DivisaController\DivisaController;
 use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
 use App\Http\Controllers\IdiomaController\IdiomaController;
+use App\Http\Controllers\PropertyTypeController\PropertyTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -59,11 +60,17 @@ Route::group([
         Route::delete('/delete-post-user/{id}', [PostUserController::class,'deletePostUser']);
         Route::get('/get-all-post-users', [PostUserController::class, 'getAllPostUsers']);
         
-        //Post client is doing reference to user enterprise
+        //Post user enterprise
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
-        Route::get('/get-post-client/{user_id}/{type_post}/{property_type_id?}',[PostClientController::class, 'getEnterprisePostsByUser']);
-        Route::get('/get-enterprise-post-by-user/{user_id}/{type_post}/{property_type_id?}/{post_id}', [PostClientController::class, 'getEnterprisePostsByUser']);
+        Route::get('/get-post-type-hose-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeHoseByUserEnterprise']);
+        Route::get('/get-post-type-departament-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeDepartamentByUserEnterprise']);
+        Route::get('/get-post-type-office-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeOfficeByUserEnterprise']);
+        Route::get('/get-post-type-ground-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeGroundByUserEnterprise']);
+        Route::get('/get-post-type-others-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeOthersByUserEnterprise']);
         Route::delete('/delete-post-user-enterprise/{post_id}/{type_post}/{property_type_id?}', [PostClientController::class, 'deletePostUserEnterprise']);
+        
+        //property Types
+        Route::get('/get-property-type/{id}', [PropertyTypeController::class, 'store']);
         //PropertyService
         Route::get('/get-property-services', [ServiceController::class, 'getServicesProperty']);
         

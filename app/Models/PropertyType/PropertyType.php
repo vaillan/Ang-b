@@ -23,18 +23,18 @@ class PropertyType extends Model
     ];
 
     public function ground() {
-        return $this->hasMany('App\Models\Grouund\Ground', 'property_type_id');
+        return $this->hasMany('App\Models\Grouund\Ground', 'property_type_id', 'id');
     }
 
     public function office() {
-        return $this->hasMany('App\Models\Office\Office', 'property_type_id');
+        return $this->hasMany('App\Models\Office\Office', 'property_type_id', 'id');
     }
 
     public function departament() {
-        return $this->hasMany('App\Models\Departament\Departament', 'property_type_id');
+        return $this->hasMany('App\Models\Departament\Departament', 'property_type_id', 'id');
     }
 
     public function house() {
-        return $this->hasMany('App\Models\House\House', 'property_type_id');
+        return $this->hasMany('App\Models\House\House', 'property_type_id', 'id');
     }
 }
