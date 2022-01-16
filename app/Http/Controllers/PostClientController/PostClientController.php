@@ -8,14 +8,13 @@ use App\Http\Controllers\ConservationStateSelectedController\ConservationStateSe
 use App\Http\Controllers\GeneralCategorySelectedController\GeneralCategorySelectedController;
 use App\Http\Controllers\Controller;
 use App\Models\PostClient\PostClient;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Images\Images;
 use App\Helpers\Helpers;
 use App\Models\User;
-use Exception;
 use Validator;
 use File;
+use Storage;
 use Illuminate\Support\Facades\Auth;
 
 class PostClientController extends Controller
@@ -45,8 +44,8 @@ class PostClientController extends Controller
             if($validator->fails()) {
                 return $validator->errors();
             }else {
-                $files = $request->images;
-                if($files) {
+                if($request->hasFile('images')) {
+                    $files = $request->images;
                     $postClient = $this->create($request);
                     if($postClient) {
                         $serviceSelected->store($request, $postClient);
@@ -59,14 +58,14 @@ class PostClientController extends Controller
                         $image_full = \time()+$count.'.'.$image->extension();
                         //guardarla en la carpeta storage/app/public/usersClientImg
                         Storage::disk('usersClientImg')->put($image_full, File::get($image));
-                        $i = Images::create([
+                        $img = Images::create([
                             'post_client_id' => $postClient->id,
                             'image' => $image_full,
                         ]);
                         $count = $count+1;
-                        $img = Storage::disk('usersClientImg')->url($i->image);
-                        $i->url = $img;
-                        $i->save();
+                        $imgUrl = Storage::disk('usersClientImg')->url($img->image);
+                        $img->url = $imgUrl;
+                        $img->save();
                     }
                 }else {
                     return ['valid' => false, 'message' => 'Fallo al cargar imagenes'];
@@ -112,6 +111,12 @@ class PostClientController extends Controller
         return $postClient;
     }
 
+    public function update(Request $request) {
+        $post = PostClient::find($request->input('id'));
+        $post->update($request->all());
+        return $post;
+    }
+
     public function getPostTypeHoseByUserEnterprise(Request $request, $user_id, $post_id=null) {
         $post = PostClient::where('user_id',$user_id)
         ->whereNotNull('house_id')
@@ -120,7 +125,7 @@ class PostClientController extends Controller
             $query->where('id', $post_id);
         })
         ->with(['house', 'divisa', 'images','rent', 'user'])
-        ->paginate(2);
+        ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
@@ -132,7 +137,7 @@ class PostClientController extends Controller
             $query->where('id', $post_id);
         })
         ->with(['user','departament', 'divisa', 'rent', 'images'])
-        ->paginate(2);
+        ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
@@ -144,7 +149,7 @@ class PostClientController extends Controller
             $query->where('id', $post_id);
         })
         ->with(['user','office', 'divisa', 'rent', 'images'])
-        ->paginate(2);
+        ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
@@ -156,7 +161,7 @@ class PostClientController extends Controller
             $query->where('id', $post_id);
         })
         ->with(['user','ground', 'divisa', 'rent', 'images'])
-        ->paginate(2);
+        ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
@@ -168,7 +173,7 @@ class PostClientController extends Controller
             $query->where('id', $post_id);
         })
         ->with(['user', 'divisa', 'rent', 'images'])
-        ->paginate(2);
+        ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 

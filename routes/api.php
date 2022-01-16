@@ -44,9 +44,13 @@ Route::group([
     Route::group([ //Rutas que necesitan autenticación
       'middleware' => 'auth:api'
     ], function() {
+        // Route::post('/update-image', [AuthController::class, 'updateImageUser']);
+        
+        //User
+        Route::post('/update-user-enterprise-profile', [AuthController::class, 'update']);
+        Route::post('/update-user-configuration',[AuthController::class,'updateConfiguration']);
         Route::get('/logout', [AuthController::class, 'logout']);
-        Route::post('/update-image', [AuthController::class, 'updateImageUser']);
-        Route::post('/update', [AuthController::class, 'update']);
+
 
         //property
         Route::get('/get-house-type', [HouseController::class, 'getHouseType']);
