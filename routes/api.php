@@ -66,11 +66,11 @@ Route::group([
         
         //Post user enterprise
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
-        Route::get('/get-post-type-hose-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeHoseByUserEnterprise']);
-        Route::get('/get-post-type-departament-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeDepartamentByUserEnterprise']);
-        Route::get('/get-post-type-office-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeOfficeByUserEnterprise']);
-        Route::get('/get-post-type-ground-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeGroundByUserEnterprise']);
-        Route::get('/get-post-type-others-by-user-enterprise/{user_id}/{post_id?}',[PostClientController::class, 'getPostTypeOthersByUserEnterprise']);
+        Route::get('/get-post-type-hose-by-user-enterprise/{user_id}/{post_id?}/{type_post?}',[PostClientController::class, 'getPostTypeHoseByUserEnterprise']);
+        Route::get('/get-post-type-departament-by-user-enterprise/{user_id}/{post_id?}/{type_post?}',[PostClientController::class, 'getPostTypeDepartamentByUserEnterprise']);
+        Route::get('/get-post-type-office-by-user-enterprise/{user_id}/{post_id?}/{type_post?}',[PostClientController::class, 'getPostTypeOfficeByUserEnterprise']);
+        Route::get('/get-post-type-ground-by-user-enterprise/{user_id}/{post_id?}/{type_post?}',[PostClientController::class, 'getPostTypeGroundByUserEnterprise']);
+        Route::get('/get-post-type-others-by-user-enterprise/{user_id}/{post_id?}/{type_post?}',[PostClientController::class, 'getPostTypeOthersByUserEnterprise']);
         Route::delete('/delete-post-user-enterprise/{post_id}/{type_post}/{property_type_id?}', [PostClientController::class, 'deletePostUserEnterprise']);
         
         //property Types

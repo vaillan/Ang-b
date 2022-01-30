@@ -117,60 +117,65 @@ class PostClientController extends Controller
         return $post;
     }
 
-    public function getPostTypeHoseByUserEnterprise(Request $request, $user_id, $post_id=null) {
+    public function getPostTypeHoseByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
         $post = PostClient::where('user_id',$user_id)
         ->whereNotNull('house_id')
-        ->when($post_id, function ($query) use ($post_id) {
+        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
             $query->where('id', $post_id);
+            $query->where('type_post', $type_post);
         })
         ->with(['house', 'divisa', 'images','rent', 'user'])
         ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeDepartamentByUserEnterprise(Request $request, $user_id, $post_id=null) {
+    public function getPostTypeDepartamentByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
         $post = PostClient::where('user_id',$user_id)
         ->whereNotNull('departament_id')
-        ->when($post_id, function ($query) use ($post_id) {
+        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
             $query->where('id', $post_id);
+            $query->where('type_post', $type_post);
         })
         ->with(['user','departament', 'divisa', 'rent', 'images'])
         ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeOfficeByUserEnterprise(Request $request, $user_id, $post_id=null) {
+    public function getPostTypeOfficeByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
         $post = PostClient::where('user_id',$user_id)
         ->whereNotNull('office_id')
-        ->when($post_id, function ($query) use ($post_id) {
+        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
             $query->where('id', $post_id);
+            $query->where('type_post', $type_post);
         })
         ->with(['user','office', 'divisa', 'rent', 'images'])
         ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeGroundByUserEnterprise(Request $request, $user_id, $post_id=null) {
+    public function getPostTypeGroundByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
         $post = PostClient::where('user_id',$user_id)
         ->whereNotNull('ground_id')
-        ->when($post_id, function ($query) use ($post_id) {
+        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
             $query->where('id', $post_id);
+            $query->where('type_post', $type_post);
         })
         ->with(['user','ground', 'divisa', 'rent', 'images'])
         ->paginate(12);
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeOthersByUserEnterprise(Request $request, $user_id, $post_id=null) {
+    public function getPostTypeOthersByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
         $post = PostClient::where('user_id',$user_id)
         ->whereNotNull('otros')
-        ->when($post_id, function ($query) use ($post_id) {
+        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
             $query->where('id', $post_id);
+            $query->where('type_post', $type_post);
         })
         ->with(['user', 'divisa', 'rent', 'images'])
         ->paginate(12);
@@ -194,6 +199,7 @@ class PostClientController extends Controller
             $conservationStateSelected->destroy($postUserEnterprise->id);
             $generalCategorySelected->destroy($postUserEnterprise->id);
             $postUserEnterprise->delete();
+            $getPosts = null;
             switch ($property_type_id) {
                 case 1:
                 # code...
