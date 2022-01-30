@@ -117,10 +117,11 @@ class PostClientController extends Controller
         return $post;
     }
 
-    public function getPostTypeHoseByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
+    public function getPostTypeHoseByUserEnterprise(Request $request, $user_id, $type_post, $post_id=null) {
         $post = PostClient::where('user_id',$user_id)
+        ->where('type_post',$type_post)
         ->whereNotNull('house_id')
-        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
+        ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) { // Ejecusion cuando se edita
             $query->with(['conservationState','services','generalCategories','exteriors']);
             $query->where('id', $post_id);
             $query->where('type_post', $type_post);
@@ -130,8 +131,9 @@ class PostClientController extends Controller
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeDepartamentByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
+    public function getPostTypeDepartamentByUserEnterprise(Request $request, $user_id, $type_post, $post_id=null) {
         $post = PostClient::where('user_id',$user_id)
+        ->where('type_post',$type_post)
         ->whereNotNull('departament_id')
         ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
@@ -143,8 +145,9 @@ class PostClientController extends Controller
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeOfficeByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
+    public function getPostTypeOfficeByUserEnterprise(Request $request, $user_id, $type_post, $post_id=null) {
         $post = PostClient::where('user_id',$user_id)
+        ->where('type_post',$type_post)
         ->whereNotNull('office_id')
         ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
@@ -156,8 +159,9 @@ class PostClientController extends Controller
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeGroundByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
+    public function getPostTypeGroundByUserEnterprise(Request $request, $user_id, $type_post, $post_id=null) {
         $post = PostClient::where('user_id',$user_id)
+        ->where('type_post',$type_post)
         ->whereNotNull('ground_id')
         ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
@@ -169,8 +173,9 @@ class PostClientController extends Controller
         return response()->json(['valid' => true, 'posts' => $post], 200);
     }
 
-    public function getPostTypeOthersByUserEnterprise(Request $request, $user_id, $post_id=null, $type_post=null) {
+    public function getPostTypeOthersByUserEnterprise(Request $request, $user_id, $type_post, $post_id=null) {
         $post = PostClient::where('user_id',$user_id)
+        ->where('type_post',$type_post)
         ->whereNotNull('otros')
         ->when($post_id && $type_post, function ($query) use ($post_id, $type_post) {
             $query->with(['conservationState','services','generalCategories','exteriors']);
@@ -203,27 +208,27 @@ class PostClientController extends Controller
             switch ($property_type_id) {
                 case 1:
                 # code...
-                $getPosts = $this->getPostTypeHoseByUserEnterprise($request, $user->id);
+                $getPosts = $this->getPostTypeHoseByUserEnterprise($request, $user->i, $type_post);
                 break;
 
                 case 2:
                 # code...
-                $getPosts = $this->getPostTypeDepartamentByUserEnterprise($request, $user->id);
+                $getPosts = $this->getPostTypeDepartamentByUserEnterprise($request, $user->id, $type_post);
                 break;
 
                 case 3:
                 # code...
-                $getPosts = $this->getPostTypeOfficeByUserEnterprise($request, $user->id);
+                $getPosts = $this->getPostTypeOfficeByUserEnterprise($request, $user->id, $type_post);
                 break;
 
                 case 4:
                 # code...
-                $getPosts = $this->getPostTypeGroundByUserEnterprise($request, $user->id);
+                $getPosts = $this->getPostTypeGroundByUserEnterprise($request, $user->id, $type_post);
                 break;
 
                 case 5:
                 # code...
-                $getPosts = $this->getPostTypeOthersByUserEnterprise($request, $user->id);
+                $getPosts = $this->getPostTypeOthersByUserEnterprise($request, $user->id, $type_post);
                 break;
 
                 default:
