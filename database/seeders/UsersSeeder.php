@@ -18,7 +18,7 @@ class UsersSeeder extends Seeder
             'name' => 'Valentin',
             'last_name' => 'Ortiz',
             'about_me' => 'Ingeniero en Electrónica',
-            'role' => 'user',
+            'role' => 'Empresa',
             'email' => 'ortizsantiago9303@gmail.com',
             'password' => Hash::make('admin00#$'),
             'nick' => 'Val93',

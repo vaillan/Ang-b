@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
-use App\Models\User;
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -25,9 +24,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        Passport::routes();
-        // Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
-    
+ 
+        if (!$this->app->routesAreCached()) {
+            Passport::routes();
+        }
     }
 }

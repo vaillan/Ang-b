@@ -64,7 +64,9 @@ class PostClientController extends Controller
                         ]);
                         $count = $count+1;
                         $imgUrl = Storage::disk('usersClientImg')->url($img->image);
+                        $Imgcontent = Storage::disk('usersClientImg')->get($img->image);
                         $img->url = $imgUrl;
+                        $img->content = "data:image/png;base64,".base64_encode($Imgcontent);
                         $img->save();
                     }
                 }else {
