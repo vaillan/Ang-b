@@ -30,7 +30,7 @@ class CreatePostClientTable extends Migration
             $table->string('titulo');
             $table->string('descripcion');
             $table->boolean('status')->nullable(1)->default(0);
-            $table->float('precio');
+            $table->float('precio',40,10);
             $table->string('type_post');
             $table->unsignedInteger('numExt')->nullable(1)->default(0);
             $table->unsignedInteger('numInt')->nullable(1)->default(0);

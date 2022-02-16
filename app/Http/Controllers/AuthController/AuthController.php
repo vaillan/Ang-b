@@ -96,9 +96,16 @@ class AuthController extends Controller
                     $user->image = $image_full;
                     $imgUrl = Storage::disk('usersImg')->url($user->image);
                     $user->url_image = $imgUrl;
-                    $user->save();
                 }
-                $user->update($request->all());
+                $request->name !== "null" ? $user->name = $request->name: NULL;
+                $request->last_name !== "null" ? $user->last_name = $request->last_name: NULL;
+                $request->nick !== "null" ? $user->nick = $request->nick : NULL;
+                $request->email !== "null" ? $user->email = $request->email : NULL;
+                $request->country !== "null" ? $user->country = $request->country: NULL;
+                $request->city !== "null" ? $user->city = $request->city: NULL;
+                $request->address !== "null" ? $user->address = $request->address: NULL;
+                $request->postal_code !== "null" ? $user->postal_code = $request->postal_code: NULL;
+                $user->save();
                 return response()->json(['valid' => true, 'message' => 'datos actualizados correctamente', 'user' => $user], 200);
             }
         });

@@ -66,7 +66,7 @@ class PostClientController extends Controller
                         $imgUrl = Storage::disk('usersClientImg')->url($img->image);
                         $Imgcontent = Storage::disk('usersClientImg')->get($img->image);
                         $img->url = $imgUrl;
-                        $img->content = "data:image/png;base64,".base64_encode($Imgcontent);
+                        $img->content = "data:image/".$image->extension().";base64,".base64_encode($Imgcontent);
                         $img->save();
                     }
                 }else {

@@ -11,7 +11,9 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
         "laravel/passport": "^10.3",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "nyholm/psr7": "^1.5",
+        "symfony/psr-http-message-bridge": "^2.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
