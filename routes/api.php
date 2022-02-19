@@ -66,6 +66,7 @@ Route::group([
         
         //Post user enterprise
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
+        Route::post('/edit-post-user-client', [PostClientController::class, 'editPostClientEnterprise']);
         Route::get('/get-post-type-hose-by-user-enterprise/{user_id}/{type_post}/{post_id?}',[PostClientController::class, 'getPostTypeHoseByUserEnterprise']);
         Route::get('/get-post-type-departament-by-user-enterprise/{user_id}/{type_post}/{post_id?}',[PostClientController::class, 'getPostTypeDepartamentByUserEnterprise']);
         Route::get('/get-post-type-office-by-user-enterprise/{user_id}/{type_post}/{post_id?}',[PostClientController::class, 'getPostTypeOfficeByUserEnterprise']);

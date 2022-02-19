@@ -16,7 +16,7 @@ use Validator;
 use File;
 use Storage;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\Collection;
 class PostClientController extends Controller
 {
 
@@ -46,12 +46,13 @@ class PostClientController extends Controller
             }else {
                 if($request->hasFile('images')) {
                     $files = $request->images;
-                    $postClient = $this->create($request);
+                    $postClient = PostClient::create($this->clearRequest($request));
                     if($postClient) {
-                        $serviceSelected->store($request, $postClient);
-                        $exteriorSelected->store($request, $postClient);
-                        $conservationStateSelected->store($request, $postClient);
-                        $generalCategorySelected->store($request, $postClient);
+                        $postClientId = $postClient->id;
+                        $serviceSelected->store($request, $postClientId);
+                        $exteriorSelected->store($request, $postClientId);
+                        $conservationStateSelected->store($request, $postClientId);
+                        $generalCategorySelected->store($request, $postClientId);
                     }
                     foreach ($files as $image) {
                         //asignarle un nombre unico
@@ -79,7 +80,7 @@ class PostClientController extends Controller
         return response()->json($query);
     }
 
-    public function create(Request $request) {
+    public function clearRequest(Request $request) {
         $insert = [
             'user_id' => $request->user_id,
             'moneda_id' => $request->moneda_id,
@@ -109,8 +110,83 @@ class PostClientController extends Controller
         $insert['office_id'] = isset($request->office_id) && is_numeric($request->office_id) ? $request->office_id : null;
         $insert['departament_id'] = isset($request->departament_id) && is_numeric($request->departament_id) ? $request->departament_id : null;
         $insert['house_id'] = isset($request->house_id) && is_numeric($request->house_id) ? $request->house_id : null;
-        $postClient = PostClient::create($insert);
-        return $postClient;
+        return $insert;
+    }
+
+    public function editPostClientEnterprise(Request $request) {
+        $query = \DB::transaction(function() use($request) {
+            $serviceSelected = new ServiceSelectedController();
+            $exteriorSelected = new ExteriorSelectedController();
+            $conservationStateSelected = new ConservationStateSelectedController();
+            $generalCategorySelected = new GeneralCategorySelectedController();
+            $count = 1;
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required',
+                'moneda_id' => 'required',
+                'pais' => 'required',
+                'estado' => 'required',
+                'ciudadMunicipio' => 'required',
+                'calle' => 'required',
+                'colonia' => 'required',
+                'type_post' => 'required',
+                'precio' => 'required',
+                'descripcion' => 'required',
+                'titulo' => 'required',
+            ]);
+
+            if($validator->fails()) {
+                return $validator->errors();
+            }else {
+                if($request->hasFile('images')) {
+                    $files = $request->images;
+                    $_files = new Collection($request->images);
+                    if($request->input('post_client_id')) {
+                        $serviceSelected->update($request, $request->input('post_client_id'));
+                        $exteriorSelected->update($request, $request->input('post_client_id'));
+                        $conservationStateSelected->update($request, $request->input('post_client_id'));
+                        $generalCategorySelected->update($request, $request->input('post_client_id'));
+                    }
+
+                    $storedImages = Images::where('post_client_id', $request->input('post_client_id'))->get();
+                    foreach ($storedImages as $storedImage) {
+                        if(!$_files->contains('name', $storedImage->image)) {
+                            if(Storage::delete($storedImage->image)) {
+                                $storedImage->delete();
+                            }
+                        }
+                    }
+
+                    foreach ($files as $image) {
+                        $storedImage = Images::where('post_client_id', $request->input('post_client_id'))
+                        ->where('image', $image->getClientOriginalName())->first();
+                        if(empty($storedImage)) {
+                            //asignarle un nombre unico
+                            $image_full = \time()+$count.'.'.$image->extension();
+                            //guardarla en la carpeta storage/app/public/usersClientImg
+                            Storage::disk('usersClientImg')->put($image_full, File::get($image));
+                            $img = Images::create([
+                                'post_client_id' => $request->input('post_client_id'),
+                                'image' => $image_full,
+                            ]);
+                            $count = $count+1;
+                            $imgUrl = Storage::disk('usersClientImg')->url($img->image);
+                            $Imgcontent = Storage::disk('usersClientImg')->get($img->image);
+                            $img->url = $imgUrl;
+                            $img->content = "data:image/".$image->extension().";base64,".base64_encode($Imgcontent);
+                            $img->save();
+                        }
+                    }
+
+                    $postUserEnterPrise = PostClient::find($request->input('post_client_id'));
+                    if($postUserEnterPrise->update($this->clearRequest($request))){
+                        return response()->json(['valid' => true, 'message' => 'La publiación se ha actualizado correctamente'],200);
+                    }else {
+                        return response()->json(['valid' => false, 'message' => 'A ocurrido un error, notifica este error a soporte técnico'],422);
+                    }
+                }
+            }
+        });
+        return $query;
     }
 
     public function update(Request $request) {
@@ -199,7 +275,9 @@ class PostClientController extends Controller
             $postUserEnterprise = PostClient::find($post_id);
             $images = Images::where('post_client_id', $postUserEnterprise->id)->get();
             foreach ($images as $image) {
-                $image->delete();
+                if(Storage::delete($image->image)) {
+                    $image->delete();
+                }
             }
             $serviceSelected->destroy($postUserEnterprise->id);
             $exteriorSelected->destroy($postUserEnterprise->id);
