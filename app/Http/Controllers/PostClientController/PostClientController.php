@@ -140,6 +140,9 @@ class PostClientController extends Controller
                 if($request->hasFile('images')) {
                     $files = $request->images;
                     $_files = new Collection($request->images);
+                    $imagesCollection = $_files->map(function ($item, $key) {
+                        return ['image' => $item->getClientOriginalName()];
+                    });
                     if($request->input('post_client_id')) {
                         $serviceSelected->update($request, $request->input('post_client_id'));
                         $exteriorSelected->update($request, $request->input('post_client_id'));
@@ -149,10 +152,9 @@ class PostClientController extends Controller
 
                     $storedImages = Images::where('post_client_id', $request->input('post_client_id'))->get();
                     foreach ($storedImages as $storedImage) {
-                        if(!$_files->contains('name', $storedImage->image)) {
-                            if(Storage::delete($storedImage->image)) {
-                                $storedImage->delete();
-                            }
+                        if(!$imagesCollection->contains('image', $storedImage->image)) {
+                            $storedImage->delete();
+                            Storage::disk('usersClientImg')->delete($storedImage->image);
                         }
                     }
 
@@ -275,9 +277,8 @@ class PostClientController extends Controller
             $postUserEnterprise = PostClient::find($post_id);
             $images = Images::where('post_client_id', $postUserEnterprise->id)->get();
             foreach ($images as $image) {
-                if(Storage::delete($image->image)) {
-                    $image->delete();
-                }
+                $image->delete();
+                Storage::disk('usersClientImg')->delete($image->image);
             }
             $serviceSelected->destroy($postUserEnterprise->id);
             $exteriorSelected->destroy($postUserEnterprise->id);
