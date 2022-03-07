@@ -268,56 +268,56 @@ class PostClientController extends Controller
     }
 
     public function deletePostUserEnterprise(Request $request, $post_id, $type_post, $property_type_id=null) {
-        $query = \DB::transaction(function () use($request, $post_id, $type_post, $property_type_id) {
-            $user = Auth::user();
-            $serviceSelected = new ServiceSelectedController();
-            $exteriorSelected = new ExteriorSelectedController();
-            $conservationStateSelected = new ConservationStateSelectedController();
-            $generalCategorySelected = new GeneralCategorySelectedController();
-            $postUserEnterprise = PostClient::find($post_id);
-            $images = Images::where('post_client_id', $postUserEnterprise->id)->get();
-            foreach ($images as $image) {
-                $image->delete();
-                Storage::disk('usersClientImg')->delete($image->image);
-            }
-            $serviceSelected->destroy($postUserEnterprise->id);
-            $exteriorSelected->destroy($postUserEnterprise->id);
-            $conservationStateSelected->destroy($postUserEnterprise->id);
-            $generalCategorySelected->destroy($postUserEnterprise->id);
-            $postUserEnterprise->delete();
-            $getPosts = null;
-            switch ($property_type_id) {
-                case 1:
-                # code...
-                $getPosts = $this->getPostTypeHoseByUserEnterprise($request, $user->i, $type_post);
-                break;
+      $query = \DB::transaction(function () use($request, $post_id, $type_post, $property_type_id) {
+        $user = Auth::user();
+        $serviceSelected = new ServiceSelectedController();
+        $exteriorSelected = new ExteriorSelectedController();
+        $conservationStateSelected = new ConservationStateSelectedController();
+        $generalCategorySelected = new GeneralCategorySelectedController();
+        $postUserEnterprise = PostClient::find($post_id);
+        $images = Images::where('post_client_id', $postUserEnterprise->id)->get();
+        foreach ($images as $image) {
+          $image->delete();
+          Storage::disk('usersClientImg')->delete($image->image);
+        }
+        $serviceSelected->destroy($postUserEnterprise->id);
+        $exteriorSelected->destroy($postUserEnterprise->id);
+        $conservationStateSelected->destroy($postUserEnterprise->id);
+        $generalCategorySelected->destroy($postUserEnterprise->id);
+        $postUserEnterprise->delete();
+        $getPosts = null;
+        switch ($property_type_id) {
+          case 1:
+          # code...
+          $getPosts = $this->getPostTypeHoseByUserEnterprise($request, $user->id, $type_post);
+          break;
 
-                case 2:
-                # code...
-                $getPosts = $this->getPostTypeDepartamentByUserEnterprise($request, $user->id, $type_post);
-                break;
+          case 2:
+          # code...
+          $getPosts = $this->getPostTypeDepartamentByUserEnterprise($request, $user->id, $type_post);
+          break;
 
-                case 3:
-                # code...
-                $getPosts = $this->getPostTypeOfficeByUserEnterprise($request, $user->id, $type_post);
-                break;
+          case 3:
+          # code...
+          $getPosts = $this->getPostTypeOfficeByUserEnterprise($request, $user->id, $type_post);
+          break;
 
-                case 4:
-                # code...
-                $getPosts = $this->getPostTypeGroundByUserEnterprise($request, $user->id, $type_post);
-                break;
+          case 4:
+          # code...
+          $getPosts = $this->getPostTypeGroundByUserEnterprise($request, $user->id, $type_post);
+          break;
 
-                case 5:
-                # code...
-                $getPosts = $this->getPostTypeOthersByUserEnterprise($request, $user->id, $type_post);
-                break;
+          case 5:
+          # code...
+          $getPosts = $this->getPostTypeOthersByUserEnterprise($request, $user->id, $type_post);
+          break;
 
-                default:
-                # code...
-                break;
-            }
-            return $getPosts;
-        });
-        return $query;
+          default:
+          # code...
+          break;
+        }
+        return $getPosts;
+      });
+      return $query;
     }
 }

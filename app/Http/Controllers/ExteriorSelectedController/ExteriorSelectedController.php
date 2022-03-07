@@ -31,7 +31,7 @@ class ExteriorSelectedController extends Controller
             if(isset($exteriorServicesSelected)) {
                 foreach ($exteriorServicesSelected as $service) {
                     ExteriorSelected::updateOrCreate(
-                        ['exterior_id' => $service->id],
+                        ['exterior_id' => $service->id, 'post_client_id' => $postUserEnterpriseId],
                         [
                             'post_client_id' => isset($postUserEnterpriseId) ? $postUserEnterpriseId : null,
                             'post_user_id' => isset($postUserPremiumId) ? $postUserPremiumId : null
@@ -62,7 +62,7 @@ class ExteriorSelectedController extends Controller
      * @param int $post_user_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $post_client_id=null, $post_user_id=null)
+    public function update(Request $request, $post_client_id=null, $post_user_id=0)
     {
         $query = \DB::transaction(function() use($request, $post_user_id, $post_client_id){
             $exteriorServicesSelected = new Collection(json_decode($request->exteriores));
@@ -85,7 +85,7 @@ class ExteriorSelectedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($post_client_id=null, $post_user_id=null)
+    public function destroy($post_client_id=null, $post_user_id=0)
     {
         $query = \DB::transaction(function () use ($post_client_id, $post_user_id) {
             $exterios = ExteriorSelected::where('post_client_id', $post_client_id)

@@ -31,7 +31,7 @@ class ConservationStateSelectedController extends Controller
             if(isset($conservationStateServicesSelected)) {
                 foreach ($conservationStateServicesSelected as $service) {
                     ConservationStateSelected::updateOrCreate(
-                        ['conservation_state_id' => $service->id],
+                        ['conservation_state_id' => $service->id, 'post_client_id' => $postUserEnterpriseId],
                         [
                             'post_client_id' => isset($postUserEnterpriseId) ? $postUserEnterpriseId : null,
                             'post_user_id' => isset($postUserPremiumId) ? $postUserPremiumId : null
@@ -62,7 +62,7 @@ class ConservationStateSelectedController extends Controller
      * @param int $post_user_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $post_client_id=null, $post_user_id=null)
+    public function update(Request $request, $post_client_id=null, $post_user_id=0)
     {
         $query = \DB::transaction(function() use($request, $post_user_id, $post_client_id){
             $conservationStateServicesSelected = new Collection(json_decode($request->estado_conservacion));
@@ -85,7 +85,7 @@ class ConservationStateSelectedController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($post_client_id=null, $post_user_id=null)
+    public function destroy($post_client_id=null, $post_user_id=0)
     {
         $query = \DB::transaction(function () use ($post_client_id, $post_user_id) {
             $conservationState = ConservationStateSelected::where('post_client_id', $post_client_id)
