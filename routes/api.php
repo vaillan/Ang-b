@@ -19,6 +19,7 @@ use App\Http\Controllers\DivisaController\DivisaController;
 use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
 use App\Http\Controllers\IdiomaController\IdiomaController;
 use App\Http\Controllers\PropertyTypeController\PropertyTypeController;
+use App\Http\Controllers\CategoryController\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -93,5 +94,8 @@ Route::group([
         
         //Renta opciones
         Route::get('/get-renta-opciones', [RentaOpcionController::class, 'getRentaOpciones']);
-    });
+        
+        //Puestos
+        Route::apiResource('puestos', CategoryController::class);
+      });
 });
