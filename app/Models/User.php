@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-
+use App\Helpers\Helpers;
+use App\Models\categories\Category;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -32,7 +33,12 @@ class User extends Authenticatable
         'city',
         'postal_code',
         'address',
-        'configuration'
+        'configuration',
+        'created_by',
+        'updated_by',
+        'user_type_id',
+        'category_id',
+        'password_encryp',
     ];
 
     /**
@@ -54,4 +60,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'configuration' => 'object',
     ];
+
+    /**
+     * @return string
+     */
+    public function getPasswordEncrypAttribute($value)
+    {
+      $helper = new Helpers();
+      $first_key = $helper->first_key;
+      $second_key = $helper->second_key;
+      $cipher = $helper->cipher;
+      return $helper->decrypt($value, base64_encode($first_key), base64_encode($second_key), $cipher);
+    }
+
+    public function category() {
+      return $this->belongsTo(Category::class);
+    }
+
 }

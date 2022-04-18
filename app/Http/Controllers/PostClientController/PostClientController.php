@@ -81,36 +81,14 @@ class PostClientController extends Controller
     }
 
     public function clearRequest(Request $request) {
-        $insert = [
-            'user_id' => $request->user_id,
-            'moneda_id' => $request->moneda_id,
-            'renta_opcion_id' => $request->renta_opcion_id,
-            'pais' => $request->pais,
-            'estado' => $request->estado,
-            'ciudadMunicipio' => $request->ciudadMunicipio,
-            'calle' => $request->calle,
-            'colonia' => $request->colonia,
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-            'status' => isset($request->status) ? $request->status : 0,
-            'precio' => $request->precio,
-            'type_post' => $request->type_post,
-            'numExt' => $request->numExt,
-            'numInt' => $request->numInt,
-            'num_recamaras' => $request->num_recamaras,
-            'num_bathroom' => $request->num_bathroom,
-            'num_estacionamiento' => $request->num_estacionamiento,
-            'superficie_construida' => $request->superficie_construida,
-            'superficie_terreno' => $request->superficie_terreno,
-        ];
-        if(isset($request->otros) && $request->otros != "null") $insert['otros'] = $request->otros;
-        if(isset($request->youtubeId) && $request->youtubeId != "null") $insert['youtubeId'] = $request->youtubeId;
-        if(isset($request->leflet_map) && $request->leflet_map != "null") $insert['leflet_map'] = $request->leflet_map;
-        $insert['ground_id'] = isset($request->ground_id) && is_numeric($request->ground_id) ? $request->ground_id : null;
-        $insert['office_id'] = isset($request->office_id) && is_numeric($request->office_id) ? $request->office_id : null;
-        $insert['departament_id'] = isset($request->departament_id) && is_numeric($request->departament_id) ? $request->departament_id : null;
-        $insert['house_id'] = isset($request->house_id) && is_numeric($request->house_id) ? $request->house_id : null;
-        return $insert;
+      $collect = collect($request->all())->filter(function ($item, $key) {
+        if($item !== "null") {
+          return $item;
+        }
+      });
+      $collect->put('created_by', Auth::id());
+      $collect->put('updated_by', Auth::id());
+      return $collect->all();
     }
 
     public function editPostClientEnterprise(Request $request) {
@@ -317,6 +295,21 @@ class PostClientController extends Controller
           break;
         }
         return $getPosts;
+      });
+      return $query;
+    }
+
+    public function assignAgent(Request $request) {
+      $query = \DB::transaction(function () use($request) {
+        $post = PostClient::find($request->post_id);
+        $user = Auth::user();
+        $post->updated_by = $user["id"];
+        $post->assigned_user_id = $request->user_assigned_id;
+        if($post->save()) {
+          return response()->json(['error' => false, 'message' => 'Agente asignado correctamente'],200);
+        }else {
+          return response()->json(['error' => true, 'message' => 'Error al asignar el agente'],422);
+        }
       });
       return $query;
     }

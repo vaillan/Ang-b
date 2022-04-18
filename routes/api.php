@@ -20,6 +20,7 @@ use App\Http\Controllers\RentaOpcionController\RentaOpcionController;
 use App\Http\Controllers\IdiomaController\IdiomaController;
 use App\Http\Controllers\PropertyTypeController\PropertyTypeController;
 use App\Http\Controllers\CategoryController\CategoryController;
+use App\Http\Controllers\UserTypeController\UserTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -52,7 +53,11 @@ Route::group([
         Route::post('/update-user-configuration',[AuthController::class,'updateConfiguration']);
         Route::get('/logout', [AuthController::class, 'logout']);
 
-
+        //UserEnterprise
+        Route::post('/create-user-enterprise', [AuthController::class, 'createUserEnterprise']);
+        Route::post('/update-user-enterprise/{id}', [AuthController::class, 'updateUserEnterprise']);
+        Route::get('/get-users-by-client-enterprise/{user_enterprise_id}', [AuthController::class, 'getUsersByClientEnterprise']);
+        Route::get('/get-users-by-client-enterprise-by-category/{user_enterprise_id}/{category_id}', [AuthController::class, 'getUsersEnterpriseByCategory']);
         //property
         Route::get('/get-house-type', [HouseController::class, 'getHouseType']);
         Route::get('/get-departament-type', [DepartamentController::class, 'getDepartamentType']);
@@ -66,6 +71,7 @@ Route::group([
         Route::get('/get-all-post-users', [PostUserController::class, 'getAllPostUsers']);
         
         //Post user enterprise
+        Route::post('/asignar-agente', [PostClientController::class, 'assignAgent']);
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
         Route::post('/edit-post-user-client', [PostClientController::class, 'editPostClientEnterprise']);
         Route::get('/get-post-type-hose-by-user-enterprise/{user_id}/{type_post}/{post_id?}',[PostClientController::class, 'getPostTypeHoseByUserEnterprise']);
@@ -95,7 +101,8 @@ Route::group([
         //Renta opciones
         Route::get('/get-renta-opciones', [RentaOpcionController::class, 'getRentaOpciones']);
         
-        //Puestos
+        //resource
         Route::apiResource('puestos', CategoryController::class);
+        Route::apiResource('tiposUsuarios', UserTypeController::class);
       });
 });

@@ -15,7 +15,7 @@ class AddNewColumnsToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('role')->default('Empresa');
-            $table->string('nick',255);
+            $table->string('nick',255)->nullable(1);
             $table->string('last_name',100);
             $table->string('image')->nullable(1);
             $table->string('about_me')->nullable(1);
