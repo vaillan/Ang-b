@@ -21,6 +21,8 @@ use App\Http\Controllers\IdiomaController\IdiomaController;
 use App\Http\Controllers\PropertyTypeController\PropertyTypeController;
 use App\Http\Controllers\CategoryController\CategoryController;
 use App\Http\Controllers\UserTypeController\UserTypeController;
+use App\Http\Controllers\PaypalProductController\PaypalProductController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -72,6 +74,7 @@ Route::group([
         
         //Post user enterprise
         Route::post('/asignar-agente', [PostClientController::class, 'assignAgent']);
+        Route::post('/calcel-assign', [PostClientController::class, 'cancelAssign']);
         Route::post('/create-post-user-client', [PostClientController::class, 'createPostClient']);
         Route::post('/edit-post-user-client', [PostClientController::class, 'editPostClientEnterprise']);
         Route::get('/get-post-type-hose-by-user-enterprise/{user_id}/{type_post}/{post_id?}',[PostClientController::class, 'getPostTypeHoseByUserEnterprise']);
@@ -102,7 +105,11 @@ Route::group([
         Route::get('/get-renta-opciones', [RentaOpcionController::class, 'getRentaOpciones']);
         
         //resource
+        #Puestos
         Route::apiResource('puestos', CategoryController::class);
+        #Tipo de usuarios
         Route::apiResource('tiposUsuarios', UserTypeController::class);
+        #Paypal
+        Route::apiResource('paypal', PaypalProductController::class);
       });
 });

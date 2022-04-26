@@ -17,7 +17,7 @@ class UsersTypeSeeder extends Seeder
         'Administrador',
         'Full',
         'Guest',
-        'usuario'
+        'Usuario'
       ];
       foreach ($usersType as $userType) {
         \DB::table('users_type')->insert([

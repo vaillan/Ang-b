@@ -6,6 +6,7 @@ use App\Http\Controllers\ServiceSelectedController\ServiceSelectedController;
 use App\Http\Controllers\ExteriorSelectedController\ExteriorSelectedController;
 use App\Http\Controllers\ConservationStateSelectedController\ConservationStateSelectedController;
 use App\Http\Controllers\GeneralCategorySelectedController\GeneralCategorySelectedController;
+use App\Http\Controllers\AuthController\AuthController;
 use App\Http\Controllers\Controller;
 use App\Models\PostClient\PostClient;
 use Illuminate\Http\Request;
@@ -309,6 +310,24 @@ class PostClientController extends Controller
           return response()->json(['error' => false, 'message' => 'Agente asignado correctamente'],200);
         }else {
           return response()->json(['error' => true, 'message' => 'Error al asignar el agente'],422);
+        }
+      });
+      return $query;
+    }
+
+    public function cancelAssign(Request $request) {
+      $query = \DB::transaction(function () use($request) {
+        $authController = new AuthController();
+        $category_id = 5;
+        $post = PostClient::find($request->post_id);
+        $user = Auth::user();
+        $post->updated_by = $user["id"];
+        $post->assigned_user_id = null;
+        if($post->save()) {
+          $users = $authController->getUsersEnterpriseByCategory($request, $user->id, $category_id);
+          return response()->json(['message' => 'Agente cancelado correctamente', 'users' => $users->original["users"]],200);
+        }else {
+          return response()->json(['message' => 'Error al cancelar el agente'],422);
         }
       });
       return $query;
